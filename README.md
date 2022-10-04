@@ -94,7 +94,7 @@ $ docker-compose up -d
 
 ```bash
 $ docker-compose exec app bash
-# cd app
+# cd creator
 # composer install
 ```
 
