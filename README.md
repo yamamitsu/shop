@@ -86,6 +86,9 @@ $ git config --global core.autocrlf input
 
 ```bash
 $ cd bcp_creator
+$ cd creator
+$ cp .env.local .env
+$ cd ..
 $ docker-compose up -d
 ```
 
