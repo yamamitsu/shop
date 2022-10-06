@@ -5,6 +5,8 @@ services:
     build: ./docker/php
     volumes:
       - .:/var/www
+      - ./docker/php/dev/php-xdebug.ini:/usr/local/etc/php/conf.d/php-xdebug.ini:ro
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini:ro
   nginx:
     image: nginx 
     container_name: nginx
@@ -17,18 +19,19 @@ services:
     depends_on:
       - app
   db:
-    image: mysql:5.7 
+    image: mysql:8 
     container_name: db
     environment: 
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: database
+      MYSQL_DATABASE: bcp_creator
       MYSQL_USER: db-user
       MYSQL_PASSWORD: db-pass
       TZ: 'Asia/Tokyo' 
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-authentication-plugin=mysql_native_password
+    restart: always
     volumes:  
       - ./docker/db/data:/var/lib/mysql
-      - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf 
+      - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf:ro
       - ./docker/db/sql:/docker-entrypoint-initdb.d
     ports:
       - 33306:3306
