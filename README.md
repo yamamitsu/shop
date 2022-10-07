@@ -14,14 +14,15 @@ https://www.chusho.meti.go.jp/bcp/contents/level_c/bcpgl_01_1.html
 本プロジェクトはフルタック型ウェブシステムです。
 以下のDockerコンテナから構成されます。
 
-- db
-  - RDBサーバー(mysql, MariaDB)
-- nginx
-  - ウェブサーバー(nginx)
 - php
   - ウェブサービス本体
   - php-8.1
   - Laravel 9
+  - composer内蔵。composer, artisanを実行するときはコンテナ内で実行すること。
+- db
+  - RDBサーバー(mysql, MariaDB)
+- nginx
+  - ウェブサーバー(nginx)
 
 
 ## Dockerの構成
@@ -89,7 +90,7 @@ $ cd bcp_creator
 $ cd creator
 $ cp .env.local .env
 $ cd ..
-$ docker-compose up -d
+$ docker-compose up -d --build
 ```
 
 - Docker内にログインする
@@ -100,6 +101,32 @@ $ docker-compose exec app bash
 # cd creator
 # composer install
 ```
+
+### composer
+
+composer.json は `/creator` 以下で構築されており、Laravel 9アプリでもある。
+composerコマンドは app コンテナ内で実行すること。
+
+例： composer.lock で指定されたパッケージをインストールする
+
+```bash
+$ docker-compose exec app bash
+# cd creator
+# composer install
+```
+
+### artisan
+
+composerコマンドは app コンテナ内で実行すること。
+
+例: ウェブアプリのルート設定の確認
+
+```bash
+$ docker-compose exec app bash
+# cd creator
+# php artisan route:list
+```
+
 
 ## Add your files
 

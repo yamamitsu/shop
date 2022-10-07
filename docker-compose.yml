@@ -1,12 +1,27 @@
 version: '3'
 services:
   app:
-    container_name: app  
+    container_name: app
+    environment:
+      TZ: "Asia/Tokyo"
+      ENV_DIVISION: "LOCAL"
+      PHP_ERROR_REPORTING: "E_ALL"
+      PHP_DISPLAY_ERRORS: "On"
+      PHP_DISPLAY_STARTUP_ERRORS: "On"
+      PHP_OPCACHE_ENABLE: 0
+      PHP_OPCACHE_ENABLE_CLI: 0
+      PHP_XDEBUG_REMOTE_HOST: "host.docker.internal"
     build: ./docker/php
     volumes:
       - .:/var/www
       - ./docker/php/dev/php-xdebug.ini:/usr/local/etc/php/conf.d/php-xdebug.ini:ro
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini:ro
+  # composer:
+  #   image: composer
+  #   container_name: composer
+  #   command: "composer install"
+  #   volumes:
+  #     - ./creator:/app
   nginx:
     image: nginx 
     container_name: nginx
@@ -32,7 +47,8 @@ services:
       TZ: 'Asia/Tokyo' 
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-authentication-plugin=mysql_native_password
     restart: always
-    volumes:  
+    volumes:
+## mysql DBの実データをローカルに保存したい場合はこのコメントアウトをオフにしてバイマウントする
 #      - ./docker/db/data:/var/lib/mysql
       - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf:ro
       - ./docker/db/sql:/docker-entrypoint-initdb.d
