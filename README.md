@@ -127,6 +127,29 @@ $ docker-compose exec app bash
 # php artisan route:list
 ```
 
+### debug方法
+
+Xdebug3でデバッグできる。
+
+vscodeの場合、launch.json内に以下のように記載する。(必要な拡張は各自インストールすること)
+
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Listen for Xdebug",
+            "type": "php",
+            "request": "launch",
+            "port": 9003,
+            "pathMappings": {
+                "/var/www/creator": "${workspaceRoot}/creator"
+             }
+        },
+    ]
+}
+```
+
 
 ## Add your files
 
