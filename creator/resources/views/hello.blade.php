@@ -1,7 +1,8 @@
 @extends('common.layout')
 
 @section('child')
-    <p>{{ $hello }}<p>
+<p>{{ $hello }}<p>
+<p>kkk {{ $aaa }}<p>
     <div>
         <ul>
     @foreach ($hello_array as $a)

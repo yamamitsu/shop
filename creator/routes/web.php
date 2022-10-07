@@ -18,3 +18,5 @@ Route::get('/', function () {
 });
 // hello
 Route::get('/hello', 'App\Http\Controllers\HelloController@index');
+// hello
+Route::get('/mchapter', 'App\Http\Controllers\MChapterController@index');
