@@ -16,7 +16,7 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 
 ENV COMPOSER_HOME /composer
 
-ENV PATH $PATH:/composer/vendor/bin
+ENV PATH $PATH:/var/www/creator/vendor/bin
 
 
 WORKDIR /var/www
