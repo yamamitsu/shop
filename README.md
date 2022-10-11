@@ -155,3 +155,21 @@ vscodeの場合、launch.json内に以下のように記載する。(必要な�
 
 -- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
 -- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+
+
+## コミット文の内容
+    
+- 短い場合
+
+      git commit -m "修正内容"
+
+    
+- 長い場合
+   
+  - 修正概要
+    - 修正1
+    - 修正1
+    - 修正1
+            
+      
+
