@@ -8,10 +8,26 @@
             <li>This is user {{ $a }}</li>
     @endforeach
         </ul>
-        <div>mchapter:
+        <div>目次:
             <ul>
-                <li>version:{{$m->version}}</li>
-                <li>title:{{$m->title}}</li>
+        @php
+            $parent_id = null;
+        @endphp
+        @foreach ($chapters as $c)
+            @if (!is_null($c->parent_id) && is_null($parent_id))
+                <ul>
+            @endif
+            @if (is_null($c->parent_id) && !is_null($parent_id))
+                </ul>
+            @endif
+                <li>{{$c->pivot->idx}} <a href="/mchapter/{{$c->chapter_id}}">{{$c->title}}</a></li>
+            @php
+                $parent_id = $c->parent_id;
+            @endphp
+        @endforeach
+        @if (!is_null($parent_id))
+                </ul>
+        @endif
             </ul>
         </div>
     </div>
