@@ -18,5 +18,7 @@ Route::get('/', function () {
 });
 // hello
 Route::get('/hello', 'App\Http\Controllers\HelloController@index');
-// hello
+// 目次(章一覧)
 Route::get('/mchapter', 'App\Http\Controllers\MChapterController@index');
+// 入力欄表示(章表示)
+Route::get('/mchapter/{chapter_id}', 'App\Http\Controllers\MChapterController@view');

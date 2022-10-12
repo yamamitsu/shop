@@ -24,7 +24,6 @@ class MFormula extends Model
      */
     protected $primaryKey = 'formula_id';
 
-
     /** m_formulaに関連付けられた章リストを取得する */
     public function chapters()
     {
@@ -35,5 +34,18 @@ class MFormula extends Model
             'chapter_id'
             )->withPivot('idx')
             ->orderBy('m_formula_chapters.priority', 'DESC');
+    }
+
+    /** formula_id, chapter_idに関連付けられたquestionsを取得する */
+    public function questions(int $chapter_id)
+    {
+        return $this->belongsToMany(
+            MQuestion::class, 
+            'm_formula_questions',
+            'formula_id', 
+            'question_id'
+            )
+            ->where('chapter_id', $chapter_id)
+            ->orderBy('m_formula_questions.priority', 'DESC');
     }
 }
