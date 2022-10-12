@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MFormula;
-
+use App\Models\MChapter;
 
 class MChapterController extends Controller
 {
@@ -13,8 +13,12 @@ class MChapterController extends Controller
      */
     public function index () 
     {
+        // TODO: 書式IDを選択する昨日やページなどを後日作成する(おそらくCSS様が特定のformulaIdを指定し、利用者は意識する必要のない方式)
+        $formula_id = 1;
+        MFormula::setCurrentId($formula_id);
+
         // 指定した書式IDから章一覧を取得してviewに渡す
-        $fm = MFormula::find(1);
+        $fm = MFormula::find($formula_id);
         $chapters = $fm->chapters()->get();
 
 
@@ -27,10 +31,11 @@ class MChapterController extends Controller
     public function view (int $chapter_id)
     {
         // 指定した書式IDから設問一覧を取得してviewに渡す
-        $fm = MFormula::find(1);
+        $formula_id = MFormula::getCurrentId();
+        $fm = MFormula::find($formula_id);
         $questions = $fm->questions($chapter_id)->get();
+        $chapter = MChapter::find($chapter_id);
 
-        return view('mchapter/view', compact('chapter_id', 'questions'));
+        return view('mchapter/view', compact('chapter', 'questions'));
     }
-
 }

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class MFormula extends Model
 {
     use HasFactory;
+    const SESSION_FORMULA_ID = '_formula_id';
     /**
      * モデルに関連付けるテーブル
      *
@@ -23,6 +24,29 @@ class MFormula extends Model
      * @var string
      */
     protected $primaryKey = 'formula_id';
+
+    /**
+     * 現在の書式IDを返す
+     * 
+     * 大半のページでformula_idは固定値となるため、SESSIONに保存して読み出す方式とする。
+     *
+     * @return void
+     */
+    public static function getCurrentId()
+    {
+        $formula_id = session()->get(MFormula::SESSION_FORMULA_ID);
+        return $formula_id ?? 1;
+    }
+    /**
+     * 書式IDを設定する
+     *
+     * @param integer $formula_id 書式ID
+     * @return void
+     */
+    public static function setCurrentId(int $formula_id)
+    {
+        return session()->put(MFormula::SESSION_FORMULA_ID, $formula_id);
+    }
 
     /** m_formulaに関連付けられた章リストを取得する */
     public function chapters()
