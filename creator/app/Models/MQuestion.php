@@ -33,4 +33,21 @@ class MQuestion extends Model
             'question_id'
         );
     }
+    /** formula_id, chapter_idに関連付けられたquestionsを取得する */
+    public function entriesForBranches($document_id)
+    {
+        $entries = $this->hasMany(
+            Entry::class,
+            'entry_id',
+            'question_id'
+        )->where(['document_id' => $document_id])->get();
+        if (!$entries) {
+            return false;
+        }
+        $entriesForBranches = [];
+        foreach($entries as $e) {
+            $entriesForBranches[$e->branch_id] = $e;
+        }
+        return $entriesForBranches;
+    }
 }

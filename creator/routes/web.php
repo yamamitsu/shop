@@ -22,3 +22,5 @@ Route::get('/hello', 'App\Http\Controllers\HelloController@index');
 Route::get('/mchapter', 'App\Http\Controllers\MChapterController@index');
 // 入力欄表示(章表示)
 Route::get('/mchapter/{chapter_id}', 'App\Http\Controllers\MChapterController@view');
+// １ページ分の入力結果の表示
+Route::post('/mchapter/confirm/{chapter_id}', 'App\Http\Controllers\MChapterController@confirm');

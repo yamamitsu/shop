@@ -5,6 +5,15 @@ $entryCount = 0;
 @endphp
 @section('child')
   <h2>BCP入力欄</h2>
+  @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+  @endif
   <article>
     {{ $chapter->title }}(章ID:{{$chapter->chapter_id}})
     <form action="/mchapter/confirm/{{$chapter->chapter_id}}" method="POST">
