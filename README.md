@@ -97,14 +97,20 @@ $ docker-compose exec app composer install
 ### composer
 
 composer.json は `/creator` 以下で構築されており、Laravel 9アプリでもある。
-composerコマンドは app コンテナ内で実行すること。
 
-例： composer.lock で指定されたパッケージをインストールする
+例： 新しいパッケージをインストールする
+
+実施方法1: ホスト側から間接的にdocker内のcomposerを実行する
+
+```bash
+$ docker-compose exec app composer require laravelcollective/html
+```
+
+実施方法2: appコンテナ内でcomposerを実行する
 
 ```bash
 $ docker-compose exec app bash
-# cd creator
-# composer install
+# composer require laravelcollective/html
 ```
 
 ### artisan
