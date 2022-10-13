@@ -16,7 +16,7 @@ services:
       PHP_XDEBUG_IDE_KEY: VSCODE
     build: ./docker/php
     volumes:
-      - .:/var/www
+      - ./creator:/var/www
       - ./docker/php/dev/php-xdebug.ini:/usr/local/etc/php/conf.d/php-xdebug.ini:ro
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini:ro
     extra_hosts:
@@ -33,7 +33,7 @@ services:
     ports:
       - 8086:80 
     volumes:
-      - .:/var/www
+      - ./creator:/var/www
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     working_dir: /var/www
     depends_on:

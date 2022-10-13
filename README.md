@@ -91,15 +91,7 @@ $ cd creator
 $ cp .env.local .env
 $ cd ..
 $ docker-compose up -d --build
-```
-
-- Docker内にログインする
-- composer で phpモジュールをセットアップする
-
-```bash
-$ docker-compose exec app bash
-# cd creator
-# composer install
+$ docker-compose exec app composer install
 ```
 
 ### composer
