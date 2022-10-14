@@ -59,7 +59,7 @@ https://www.chusho.meti.go.jp/bcp/contents/level_c/bcpgl_01_1.html
 Docker Desktopにバンドルされるdocker-composeがv1系である場合、
 brew等を使って2系をインストールして差し替える必要があります。
 
-### docxker-compose の更新(Windows)
+### docker-compose の更新(Windows)
 
 MSYS2等に収録されていないようなので、開発元から直接入手します。
 https://github.com/docker/compose/releases
@@ -69,7 +69,7 @@ https://github.com/docker/compose/releases
 - `docker-compose.exe` にファイル名を変更
 - `$ docker-compose version` を実行してv2系に差し替わっていることを確認
 
-### docxker-compose の更新(Mac)
+### docker-compose の更新(Mac)
 
 以下、brewの場合。(おそらく初期状態ではdocker-compose v1系が実行される状態)
 
