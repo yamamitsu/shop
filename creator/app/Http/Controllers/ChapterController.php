@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\MFormula;
-use App\Models\MChapter;
+use App\Models\Document;
 use App\Models\Entry;
-use App\Http\Requests\NormalPageFormRequest;
+use App\Models\MChapter;
+use App\Models\MFormula;
 
 /**
  * BCP書式の章を表示するページのコントローラー
@@ -26,6 +26,15 @@ class ChapterController extends Controller
         // TODO: 書式IDを選択する昨日やページなどを後日作成する(おそらくCSS様が特定のformulaIdを指定し、利用者は意識する必要のない方式)
         $formula_id = 1;
         MFormula::setCurrentId($formula_id);
+        $document_id = 1;
+        Document::setCurrentId($document_id);
+        if(!Document::find($document_id)) {
+            Document::firstOrNew([
+                'cid' => 1,
+                'formula_id' => $formula_id,
+                'memo' => 'テスト',
+            ])->save();
+        }
 
         // 指定した書式IDから章一覧を取得してviewに渡す
         $fm = MFormula::find($formula_id);

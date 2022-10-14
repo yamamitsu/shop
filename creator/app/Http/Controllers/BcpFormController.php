@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\MFormula;
-use App\Models\MChapter;
-use App\Models\Entry;
 use App\Http\Requests\NormalPageFormRequest;
+use App\Models\Document;
+use App\Models\Entry;
+use App\Models\MChapter;
+use App\Models\MFormula;
 
 /**
  * BCP本文の入力ページの表示および登録機能を提供する
@@ -25,13 +26,11 @@ class BcpFormController extends Controller
     {
         // 指定した書式IDから設問一覧を取得してviewに渡す
         $formula_id = MFormula::getCurrentId();
+        $document_id = Document::getCurrentId();
         $fm = MFormula::find($formula_id);
-        $sql = $fm->questions($chapter_id)->toSql();
-        //$questions = $fm->questions($chapter_id)->get();
         $questions = $fm->questions($chapter_id)->with('branches')->get();
-        $chapter = MChapter::find($chapter_id);
-        $document_id = 1; // TODO
 
+        // 章の設問でcontrollerが設定されている場合はそのContollerに処理を移譲する
         foreach($questions as $i => $q) {
             if ($i == 0 && $q->controller) {
                 return redirect()->action(
@@ -40,8 +39,11 @@ class BcpFormController extends Controller
                 );
             }
         }
+        $chapter = MChapter::find($chapter_id);
+        $document = Document::find($document_id);
+        $entries = $document->entriesForBranches();
 
-        return view('bcpform/bcpform_view', compact('document_id', 'chapter', 'questions'));
+        return view('bcpform/bcpform_view', compact('document_id', 'chapter', 'questions', 'entries'));
     }
 
     /**
@@ -51,10 +53,14 @@ class BcpFormController extends Controller
     {
         // 指定した書式IDから設問一覧を取得してviewに渡す
         $formula_id = MFormula::getCurrentId();
+        $document_id = Document::getCurrentId();
         $entries = $request->input('entries');
+
+        // 入力内容がないのはおかしい
         if (!$entries) {
             return redirect()->action('App\Http\Controllers\BcpFormController@view', ['chapter_id' => $chapter_id]);
         }
+
         // TODO: Service系にこの実装を移譲させる必要がある
         foreach($entries as $entry) {
             //$en = new Entry;
@@ -75,8 +81,9 @@ class BcpFormController extends Controller
         $fm = MFormula::find($formula_id);
         $questions = $fm->questions($chapter_id)->get();
         $chapter = MChapter::find($chapter_id);
-        $document_id = 1; // TODO
-
-        return view('bcpform/bcpform_confirm', compact('document_id', 'chapter', 'questions'));
+        $document = Document::find($document_id);
+        $entries = $document->entriesForBranches();
+        
+        return view('bcpform/bcpform_view', compact('document_id', 'chapter', 'questions', 'entries'));
     }
 }

@@ -14,9 +14,6 @@ $entryCount = 0;
         <div class="col-1"></div>
         <section class="col-10">
           <h3 id="question{{ $chapter->chapter_id }}_{{ $q->question_id }}">{{ $q->question_id }}: {{ $q->content }}</h3>
-          @php
-            $entries = $q->entriesForBranches($document_id);
-          @endphp
           @if ($q->branches)
             @foreach ($q->branches as $b)
               <section>
