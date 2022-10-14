@@ -42,6 +42,7 @@ https://www.chusho.meti.go.jp/bcp/contents/level_c/bcpgl_01_1.html
   - https://www.docker.com/products/docker-desktop/
 - Visual Studio Codeのインストール(本プロジェクトの標準エディタ)
 - Windows
+  - Windows Terminalのインストール(Microsoft Storeアプリから)
   - MSYS2のインストール
   - https://www.msys2.org/
   - Git for Windowsのインストール(MSYS2のgitでもよい)
@@ -51,6 +52,7 @@ https://www.chusho.meti.go.jp/bcp/contents/level_c/bcpgl_01_1.html
   - docker-composeのインストール
 - Mac
   - brewのインストール
+  - https://brew.sh/index_ja
   - gitのインストール
   - docker-composeのインストール
 
@@ -113,6 +115,8 @@ $ docker-compose up -d --build
 $ docker-compose exec app composer install
 ```
 
+ウェブブラウザで http://localhost:8086 に接続し、開発中のbcp_creatorサービスが表示されれば初期設定完了。
+
 ### composer
 
 composer.json は `/creator` 以下で構築されており、Laravel 9アプリでもある。
@@ -154,11 +158,12 @@ $ docker-compose exec app bash
 # php artisan route:list
 ```
 
-### debug方法
+## debug方法
 
 Xdebug3でデバッグできる。
 
-vscodeの場合、launch.json内に以下のように記載する。(必要な拡張は各自インストールすること)
+vscodeの場合、`./vscode/launch.json`内に以下のように記載する。
+(必要な拡張は各自インストールすること)
 
 ```json
 {
@@ -177,6 +182,23 @@ vscodeの場合、launch.json内に以下のように記載する。(必要な�
 }
 ```
 
+## DEBUGBARについて
+
+開発中のウェブページでブラウザ下部に表示される赤いバーはLaravelのDEBUGBARです。
+
+creator/.env
+
+において
+
+```
+APP_DEBUG=true
+```
+または
+```
+APP_DEBUG=false
+DEBUGBAR_ENABLED=true
+```
+の場合に表示されます。
 
 ## Add your files
 
