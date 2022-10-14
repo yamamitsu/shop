@@ -46,7 +46,7 @@ https://www.chusho.meti.go.jp/bcp/contents/level_c/bcpgl_01_1.html
   - https://www.msys2.org/
   - Git for Windowsのインストール(MSYS2のgitでもよい)
   - https://gitforwindows.org/
-  - "Checkout as-is, comment Unix-style line endings"を選択してください
+  - "Checkout as-is, comment Unix-style line endings"を選択
   - https://qiita.com/uggds/items/00a1974ec4f115616580
   - docker-composeのインストール
 - Mac
@@ -57,17 +57,29 @@ https://www.chusho.meti.go.jp/bcp/contents/level_c/bcpgl_01_1.html
 ## docker-composeの注意点
 
 Docker Desktopにバンドルされるdocker-composeがv1系である場合、
-MSYS2やbrewを使って2系をインストールして差し替える必要があります。
+brew等を使って2系をインストールして差し替える必要があります。
 
-以下、brewの場合。
+### docxker-compose の更新(Windows)
+
+MSYS2等に収録されていないようなので、開発元から直接入手します。
+https://github.com/docker/compose/releases
+
+- 最新版の `docker-compose-windows-x86_64.exe` をダウンロード
+- PATHの通っているディレクトリにファイルを移動
+- `docker-compose.exe` にファイル名を変更
+- `$ docker-compose version` を実行してv2系に差し替わっていることを確認
+
+### docxker-compose の更新(Mac)
+
+以下、brewの場合。(おそらく初期状態ではdocker-compose v1系が実行される状態)
 
 ```bash
-brew install docker-compose
-brew unlink docker-compose
-brew link --force --overwrite docker-compose
+$ brew install docker-compose
+$ brew unlink docker-compose
+$ brew link --force --overwrite docker-compose
 ```
 
-### Windowsの注意点
+### Windowsの注意点(git)
 
 ```
 $ git config -l
@@ -78,14 +90,21 @@ $ git config -l
 $ git config --global core.autocrlf input
 ```
 
+git configは system/global/local の3段階の設定となっているため、local含めて設定値が上書きされていないか確認すること。
+
 に変更しておくこと。
+
+この作業はリポジトリをクローンする前に実施する必要があります。
 
 ### 初期設定
 
 - 本プロジェクトのリポジトリをクローンする
+- .env のセットアップ
 - Dockerコンテナのセットアップ
+- composerのセットアップ
 
 ```bash
+$ git clone https://gitlab.com/libertyfish/bcp_creator.git
 $ cd bcp_creator
 $ cd creator
 $ cp .env.local .env
@@ -97,6 +116,7 @@ $ docker-compose exec app composer install
 ### composer
 
 composer.json は `/creator` 以下で構築されており、Laravel 9アプリでもある。
+`app` コンテナ内で実行すること。
 
 例： 新しいパッケージをインストールする
 
@@ -115,9 +135,18 @@ $ docker-compose exec app bash
 
 ### artisan
 
-composerコマンドは app コンテナ内で実行すること。
+artisanは dockerと同じく `/creator` ディレクトリ以下で実行できる。
+`app` コンテナ内で実行すること。
 
 例: ウェブアプリのルート設定の確認
+
+実施方法1: ホスト側から間接的にartisanを実行する
+
+```bash
+$ docker-compose exec app php artisan route:list
+```
+
+実施方法2: appコンテナ内でartisanを実行する
 
 ```bash
 $ docker-compose exec app bash
