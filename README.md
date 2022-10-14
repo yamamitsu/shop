@@ -141,7 +141,7 @@ vscodeの場合、launch.json内に以下のように記載する。(必要な�
             "request": "launch",
             "port": 9003,
             "pathMappings": {
-                "/var/www/creator": "${workspaceRoot}/creator"
+                "/var/www": "${workspaceRoot}/creator"
              }
         },
     ]
