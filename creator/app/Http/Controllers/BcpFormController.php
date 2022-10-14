@@ -26,6 +26,7 @@ class BcpFormController extends Controller
         // 指定した書式IDから設問一覧を取得してviewに渡す
         $formula_id = MFormula::getCurrentId();
         $fm = MFormula::find($formula_id);
+        $sql = $fm->questions($chapter_id)->toSql();
         $questions = $fm->questions($chapter_id)->get();
         $chapter = MChapter::find($chapter_id);
         $document_id = 1; // TODO
@@ -33,7 +34,7 @@ class BcpFormController extends Controller
         foreach($questions as $i => $q) {
             if ($i == 0 && $q->controller) {
                 return redirect()->action(
-                    "App\Http\Controllers\{$q->controller}Controller@view", 
+                    "App\\Http\\Controllers\\{$q->controller}Controller@view", 
                     ['chapter_id' => $chapter_id]
                 );
             }

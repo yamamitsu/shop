@@ -358,10 +358,10 @@ INSERT INTO m_formula_questions (formula_id, chapter_id, question_id, priority) 
 ,(1, 1, 6, 40)
 ;
 INSERT INTO m_formula_questions (formula_id, chapter_id, question_id, priority) VALUES 
-(1, 56, 1, 9)
-,(1, 56, 2, 8)
-,(1, 56, 3, 7)
-,(1, 56, 4, 6)
-,(1, 56, 5, 5)
-,(1, 56, 6, 4)
+(1, 56, 151, 9)
+,(1, 56, 152, 8)
+,(1, 56, 153, 7)
+,(1, 56, 154, 6)
+,(1, 56, 155, 5)
+,(1, 56, 156, 4)
 ;
