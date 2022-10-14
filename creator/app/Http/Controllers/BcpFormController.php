@@ -27,7 +27,8 @@ class BcpFormController extends Controller
         $formula_id = MFormula::getCurrentId();
         $fm = MFormula::find($formula_id);
         $sql = $fm->questions($chapter_id)->toSql();
-        $questions = $fm->questions($chapter_id)->get();
+        //$questions = $fm->questions($chapter_id)->get();
+        $questions = $fm->questions($chapter_id)->with('branches')->get();
         $chapter = MChapter::find($chapter_id);
         $document_id = 1; // TODO
 

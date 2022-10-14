@@ -15,11 +15,10 @@ $entryCount = 0;
         <section class="col-10">
           <h3 id="question{{ $chapter->chapter_id }}_{{ $q->question_id }}">{{ $q->question_id }}: {{ $q->content }}</h3>
           @php
-            $branches = $q->branches()->get();
             $entries = $q->entriesForBranches($document_id);
           @endphp
-          @if ($branches)
-            @foreach ($branches as $b)
+          @if ($q->branches)
+            @foreach ($q->branches as $b)
               <section>
                 <template id="default_{{$entryCount}}">{{ $b->content }}</template>
                 <input type="hidden" name="entries[{{ $entryCount }}][question_id]" value="{{ $q->question_id }}" />
