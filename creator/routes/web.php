@@ -19,8 +19,12 @@ Route::get('/', function () {
 // hello
 Route::get('/hello', 'App\Http\Controllers\HelloController@index');
 // 目次(章一覧)
-Route::get('/mchapter', 'App\Http\Controllers\MChapterController@index');
-// 入力欄表示(章表示)
-Route::get('/mchapter/{chapter_id}', 'App\Http\Controllers\MChapterController@view');
-// １ページ分の入力結果の表示
-Route::post('/mchapter/confirm/{chapter_id}', 'App\Http\Controllers\MChapterController@confirm');
+Route::get('/chapter', 'App\Http\Controllers\ChapterController@index');
+// BCP本文入力欄表示(章表示)
+Route::get('/bcpform/{chapter_id}', 'App\Http\Controllers\BcpFormController@view');
+// BCP本文１章分の入力結果の表示
+Route::post('/bcpform/confirm/{chapter_id}', 'App\Http\Controllers\BcpFormController@confirm');
+// 地図画像入力ページの表示
+Route::get('/mapupload/{chapter_id}', 'App\Http\Controllers\MapUploadController@view');
+// 地図画像入力ページの入力結果の表示
+Route::post('/mapupload/confirm/{chapter_id}', 'App\Http\Controllers\MapUploadController@confirm');

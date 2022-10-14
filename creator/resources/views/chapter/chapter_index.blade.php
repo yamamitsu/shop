@@ -16,7 +16,7 @@
           @if (is_null($c->parent_id) && !is_null($parent_id))
             </ul>
           @endif
-          <li>{{ $c->pivot->idx }} <a href="/mchapter/{{ $c->chapter_id }}">{{ $c->title }}</a></li>
+          <li>{{ $c->pivot->idx }} <a href="/bcpform/{{ $c->chapter_id }}">{{ $c->title }}</a></li>
           @php
             $parent_id = $c->parent_id;
           @endphp

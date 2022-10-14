@@ -93,6 +93,14 @@ ROW_FORMAT=DEFAULT;
 --   12:優先業務表
 --   13:建物・説位の安全対策
 --   14:電気、ガス、生活用水が止まった場合の対策
+--
+-- コントローラーの切り替え:
+--   コントローラー名が入力されているレコードが存在する場合、その直前の入力欄までBcpFormControllerに担当させ、
+--   その次の設問から controler欄記載の controllerに切り替える。
+--   例: question_id:4, controller:'MapUploader'の場合
+--       question_id=1〜3の設問は BcpFormController が担当し、
+--       question_id=4 の設問は MapUploaderController が担当する。(章IDは流用する)
+--
 -- DROP TABLE IF EXISTS `m_questions`;
 CREATE TABLE `m_questions`
 (
@@ -100,6 +108,7 @@ CREATE TABLE `m_questions`
     `first_id`   INT DEFAULT NULL                    COMMENT '初代の項目ID。改訂版の場合に初代の項目IDを指定する',
     `version`    INT NOT NULL DEFAULT 100            COMMENT 'バージョン数(大きいほど新しい。原則100刻み)',
     `mode`       TINYINT NOT NULL DEFAULT 1          COMMENT '設問の種別(1:通常設問, 2:画像添付, 10以上:専用書式)',
+    `controller` VARCHAR(20) DEFAULT NULL            COMMENT 'コントローラー名',
     `content`    TEXT NOT NULL                       COMMENT '本文',
     `hint`       TEXT DEFAULT NULL                   COMMENT 'ヒント(注釈として画面上に直接的、間接的に表示される)',
     `memo`       TEXT DEFAULT NULL                   COMMENT 'メモ',
@@ -247,10 +256,10 @@ CREATE TABLE `entries`
     `entry_id`    INT NOT NULL AUTO_INCREMENT        COMMENT '入力内容ID',
     `cid`         INT NOT NULL                       COMMENT '契約ID',
     `document_id` INT NOT NULL                       COMMENT 'ドキュメントID',
-    `chapter_id`   INT NOT NULL                       COMMENT '章ID',
-    `question_id` INT NOT NULL                       COMMENT '設問ID',
+    `chapter_id`  INT NOT NULL                       COMMENT '章ID',
+    `question_id` INT DEFAULT NULL                   COMMENT '設問ID',
     `branch_id`   INT DEFAULT NULL                   COMMENT '項目ID',
-    `content`     TEXT NOT NULL                      COMMENT '本文',
+    `content`     TEXT DEFAULT NULL                  COMMENT '本文',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修正日時',
     PRIMARY KEY (`entry_id`)
@@ -270,7 +279,7 @@ CREATE TABLE `entry_images`
 (
     `entry_id`   INT NOT NULL                        COMMENT '入力内容ID',
     `cid`        INT NOT NULL                        COMMENT '契約ID',
-    `content`    BLOB NOT NULL                       COMMENT '添付データ',
+    `content`    MEDIUMBLOB NOT NULL                 COMMENT '添付データ',
     `memo`       TEXT DEFAULT NULL                   COMMENT '本文',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修正日時',
@@ -296,6 +305,7 @@ INSERT INTO m_chapters (chapter_id, parent_id, title) VALUES
 ,(6, 1, '優先業務の選定')
 ,(7, NULL, '研修・訓練の実施、ＢＣＰの検証・見直し')
 ,(8, NULL, '平常時の対応')
+,(56, NULL, 'ハザードマップ')
 ;
 
 
@@ -306,6 +316,14 @@ INSERT INTO m_questions (question_id, content) VALUES
 ,(4, '推進体制')
 ,(5, 'リスクの把握')
 ,(6, '優先業務の選定')
+;
+INSERT INTO m_questions (question_id, controller, content) VALUES 
+(151, 'MapUpload', '地震')
+,(152, 'MapUpload', '津波')
+,(153, 'MapUpload', '液状化')
+,(154, 'MapUpload', '土砂崩れ')
+,(155, 'MapUpload', '水害(洪水)')
+,(156, 'MapUpload', '高潮、溜池等')
 ;
 
 INSERT INTO m_branches (branch_id, question_id, priority, content, hint) VALUES 
@@ -329,6 +347,7 @@ INSERT INTO m_formula_chapters (formula_id, chapter_id, idx, priority) VALUES
 ,(1, 3, '1.2', 70)
 ,(1, 7, '2.', 20)
 ,(1, 8, '3.', 10)
+,(1, 56, '補足6', 5)
 ;
 INSERT INTO m_formula_questions (formula_id, chapter_id, question_id, priority) VALUES 
 (1, 1, 1, 90)
@@ -337,4 +356,12 @@ INSERT INTO m_formula_questions (formula_id, chapter_id, question_id, priority) 
 ,(1, 1, 4, 60)
 ,(1, 1, 5, 50)
 ,(1, 1, 6, 40)
+;
+INSERT INTO m_formula_questions (formula_id, chapter_id, question_id, priority) VALUES 
+(1, 56, 1, 9)
+,(1, 56, 2, 8)
+,(1, 56, 3, 7)
+,(1, 56, 4, 6)
+,(1, 56, 5, 5)
+,(1, 56, 6, 4)
 ;

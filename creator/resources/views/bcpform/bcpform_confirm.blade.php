@@ -16,7 +16,7 @@ $entryCount = 0;
   @endif
   <article>
     {{ $chapter->title }}(章ID:{{$chapter->chapter_id}})
-    <form action="/mchapter/confirm/{{$chapter->chapter_id}}" method="POST">
+    <form action="/bcpform/confirm/{{$chapter->chapter_id}}" method="POST">
     @csrf
     @foreach ($questions as $q)
       <div class="row">
