@@ -10,10 +10,26 @@ $entryCount = 0;
     <form action="/bcpform/confirm/{{$chapter->chapter_id}}" method="POST">
     @csrf
     @foreach ($questions as $q)
+    <!-- 通常設問 -->
+    @if ($q->mode == 1)
+    @endif
+    <!-- 画像アップロード -->
+    @if ($q->mode == 2)
+    @endif
+    <!-- 項目を増減できる設問 -->
+    @if ($q->mode == 3)
+    @endif
       <div class="row">
         <div class="col-1"></div>
         <section class="col-10">
-          <h3 id="question{{ $chapter->chapter_id }}_{{ $q->question_id }}">{{ $q->question_id }}: {{ $q->content }}</h3>
+          @if ($q->parent_id)
+            <h3 id="question{{ $chapter->chapter_id }}_{{ $q->question_id }}">{{ $q->caption }}</h3>
+          @else
+            <h3 id="question{{ $chapter->chapter_id }}_{{ $q->question_id }}">{{ $q->question_id }}: {{ $q->caption }}</h3>
+          @endif
+          @if ($q->subtext)
+            <p >{{ $q->subtext }}</p>
+          @endif
           @if ($q->branches)
             @foreach ($q->branches as $b)
               <section>

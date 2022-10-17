@@ -48,6 +48,10 @@ class BcpFormController extends Controller
 
     /**
      * 特定の章の入力欄を表示
+     *
+     * @param NormalPageFormRequest $request 
+     * @param integer $chapter_id 章ID
+     * @return void
      */
     public function confirm (NormalPageFormRequest $request, int $chapter_id)
     {

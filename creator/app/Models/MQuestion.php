@@ -29,7 +29,7 @@ class MQuestion extends Model
     {
         return $this->hasMany(
             MBranch::class,
-            'branch_id',
+            'question_id',
             'question_id'
         );
     }
