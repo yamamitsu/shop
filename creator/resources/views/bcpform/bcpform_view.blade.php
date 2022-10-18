@@ -10,21 +10,19 @@ $entryCount = 0;
     <form action="/bcpform/confirm/{{$chapter->chapter_id}}" method="POST">
     @csrf
     @foreach ($questions as $q)
-    <!-- 通常設問 -->
-    @if ($q->mode == 1)
-    @endif
-    <!-- 画像アップロード -->
-    @if ($q->mode == 2)
-    @endif
-    <!-- 項目を増減できる設問 -->
-    @if ($q->mode == 3)
-    @endif
+    
+      @if ($q->mode == 1) {{-- 通常設問 --}}
+      @endif
+      
+      @if ($q->mode == 2) {{-- 画像アップロード --}}
+      @endif
+      
       <div class="row">
         <div class="col-1"></div>
         <section class="col-10">
-          @if ($q->parent_id)
-            <h3 id="question{{ $chapter->chapter_id }}_{{ $q->question_id }}">{{ $q->caption }}</h3>
-          @else
+          @if ($q->parent_id) {{-- サブ設問 --}}
+            <h4 id="question{{ $chapter->chapter_id }}_{{ $q->question_id }}">{{ $q->caption }}</h4>
+          @else {{-- メイン設問 --}}
             <h3 id="question{{ $chapter->chapter_id }}_{{ $q->question_id }}">{{ $q->question_id }}: {{ $q->caption }}</h3>
           @endif
           @if ($q->subtext)
@@ -36,10 +34,10 @@ $entryCount = 0;
                 <template id="default_{{$entryCount}}">{{ $b->content }}</template>
                 <input type="hidden" name="entries[{{ $entryCount }}][question_id]" value="{{ $q->question_id }}" />
                 <input type="hidden" name="entries[{{ $entryCount }}][branch_id]" value="{{ $b->branch_id }}" />
-                @if ($entries)
+                @if (count($entries) > 1)
                   <input type="hidden" name="entries[{{ $entryCount }}][entry_id]" value="{{ $entries[$b->branch_id]->entry_id }}" />
                   <textarea id="entry_{{$entryCount}}" class="form-control col-12 bg-primary bg-opacity-10" name="entries[{{ $entryCount }}][content]">{{ $entries[$b->branch_id]->content }}</textarea>
-                @else
+                @else {{-- entriesが入力されていない場合はマスターの初期値をそのまま出す --}}
                   <textarea id="entry_{{$entryCount}}" class="form-control col-12 bg-primary bg-opacity-10" name="entries[{{ $entryCount }}][content]">{{ $b->content }}</textarea>
                 @endif
                 <button id="btn_reset_entry_{{$entryCount}}" class="btn btn-light float-end" style="margin-top: 5px;" onclick="resetText({{$entryCount}})" type="button">元に戻す</button>
@@ -48,6 +46,32 @@ $entryCount = 0;
                 $entryCount++;
               @endphp
             @endforeach
+            @if ($q->mode == 3) {{-- 項目を増減できる設問 --}}
+              @if ($entries[0]) {{-- 追加入力された項目の出力 --}}
+                @foreach ($entries[0] as $e)
+                  <section>
+                    <input type="hidden" name="entries[{{ $entryCount }}][question_id]" value="{{ $q->question_id }}" />
+                    <input type="hidden" name="entries[{{ $entryCount }}][entry_id]" value="{{ $e->entry_id }}" />
+                    <input type="hidden" name="entries[{{ $entryCount }}][additional]" value="1" />
+                    <textarea id="entry_{{$entryCount}}" class="form-control col-12 bg-primary bg-opacity-10" name="entries[{{ $entryCount }}][content]">{{ $e->content }}</textarea>
+                    <input id="entry_chedk_{{$entryCount}}"  type="checkbox" style="margin-top: 5px;" onclick="checkAdditional({{$entryCount}})" name="entries[{{ $entryCount }}][deleted]" value="1">
+                    <label for="entry_chedk_{{$entryCount}}">削除する</label>
+                    @php
+                      $entryCount++;
+                    @endphp
+                  </section>
+                @endforeach
+              @endif
+              <section> {{-- 新規追加用の入力欄 --}}
+                <input type="hidden" name="entries[{{ $entryCount }}][question_id]" value="{{ $q->question_id }}" />
+                <input type="hidden" name="entries[{{ $entryCount }}][additional]" />
+                <textarea id="entry_{{$entryCount}}" class="form-control col-12 bg-primary bg-opacity-10" name="entries[{{ $entryCount }}][content]"></textarea>
+                <button id="btn_add_entry_{{$entryCount}}" class="btn btn-light float-end" style="margin-top: 5px;" onclick="resetText({{$entryCount}})" type="button">追加する</button>
+                @php
+                  $entryCount++;
+                @endphp
+              </section>
+            @endif      
           @endif
         </section>
         <div class="col-1"></div>

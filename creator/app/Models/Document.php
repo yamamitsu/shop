@@ -76,7 +76,7 @@ class Document extends Model
     /**
      * 入力内容entriesのレコードをbranch_idの連想配列にして返す
      *
-     * @return Array<Entry>
+     * @return Array<Entry> 0:questionに対する追加のentry登録(branch_idの割当がない) 1>=:branch_idをkeyとした連想配列
      */
     public function entriesForBranches()
     {
@@ -88,9 +88,14 @@ class Document extends Model
         if (!$entries) {
             return false;
         }
-        $entriesForBranches = [];
+        $entriesForBranches = [0 => []];
         foreach($entries as $e) {
-            $entriesForBranches[$e->branch_id] = $e;
+            if ($e->branch_id) {
+                $entriesForBranches[$e->branch_id] = $e;
+            } else {
+                $entriesForBranches[0][] = $e;
+
+            }
         }
         return $entriesForBranches;
     }

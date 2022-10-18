@@ -67,13 +67,20 @@ class BcpFormController extends Controller
 
         // TODO: Service系にこの実装を移譲させる必要がある
         foreach($entries as $entry) {
-            //$en = new Entry;
-            $en = Entry::firstOrNew([
+            if (!$entry['content'] && !isset($entry['entry_id'])) {
+                continue; // 入力欄が空の追加入力欄は無視する
+            }
+            if (array_key_exists('deleted', $entry) && $entry['deleted']) { // 手動追加項目の削除
+                Entry::where('entry_id', $entry['entry_id'])->delete();
+                continue;
+            }
+            $en = new Entry;
+            $en->fill([
                 'cid' => 1, // TODO
-                'document_id' => 1, // TODO
+                'document_id' => $document_id,
                 'chapter_id' => $chapter_id,
                 'question_id' => $entry['question_id'],
-                'branch_id' => $entry['branch_id'],
+                'branch_id' => isset($entry['branch_id']) ? $entry['branch_id'] : null,
                 'content' => $entry['content'],
             ]);
             if (isset($entry['entry_id']) && $entry['entry_id']) {
@@ -83,7 +90,7 @@ class BcpFormController extends Controller
             $en->save();
         }
         $fm = MFormula::find($formula_id);
-        $questions = $fm->questions($chapter_id)->get();
+        $questions = $fm->questions($chapter_id)->with('branches')->get();
         $chapter = MChapter::find($chapter_id);
         $document = Document::find($document_id);
         $entries = $document->entriesForBranches();
