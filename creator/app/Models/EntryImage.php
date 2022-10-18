@@ -25,12 +25,13 @@ class EntryImage extends Model
     protected $primaryKey = 'entry_id';
 
     protected $fillable = [
+        'entry_id',
         'cid',
         'content',
+        'content_path',
         'memo',
     ];
 
     protected $guarded = [
-        'entry_id',
     ];
 }

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\NormalPageFormRequest;
 use App\Models\Document;
 use App\Models\Entry;
+use App\Models\EntryImage;
 use App\Models\MChapter;
 use App\Models\MFormula;
 
@@ -66,28 +68,59 @@ class BcpFormController extends Controller
         }
 
         // TODO: Service系にこの実装を移譲させる必要がある
-        foreach($entries as $entry) {
-            if (!$entry['content'] && !isset($entry['entry_id'])) {
+        foreach($entries as $i => $entry) {
+            if (!isset($entry['for_image']) && !$entry['content'] && !isset($entry['entry_id'])) {
                 continue; // 入力欄が空の追加入力欄は無視する
             }
+            $en = null;
             if (array_key_exists('deleted', $entry) && $entry['deleted']) { // 手動追加項目の削除
                 Entry::where('entry_id', $entry['entry_id'])->delete();
+            } else {
+                $en = new Entry;
+                $en->fill([
+                    'cid' => 1, // TODO
+                    'document_id' => $document_id,
+                    'chapter_id' => $chapter_id,
+                    'question_id' => $entry['question_id'],
+                    'branch_id' => isset($entry['branch_id']) ? $entry['branch_id'] : null,
+                ]);
+                if (isset($entry['content']) && $entry['content']) {
+                    $en->content = $entry['content'];
+                }
+                if (isset($entry['entry_id']) && $entry['entry_id']) {
+                    $en->entry_id = $entry['entry_id'];
+                    $en->exists = true;
+                }
+                $en->save();
+            }
+
+            // 画像がアップロードされている
+            if (!isset($entry['for_image'])) {
                 continue;
             }
-            $en = new Entry;
-            $en->fill([
-                'cid' => 1, // TODO
-                'document_id' => $document_id,
-                'chapter_id' => $chapter_id,
-                'question_id' => $entry['question_id'],
-                'branch_id' => isset($entry['branch_id']) ? $entry['branch_id'] : null,
-                'content' => $entry['content'],
-            ]);
-            if (isset($entry['entry_id']) && $entry['entry_id']) {
-                $en->entry_id = $entry['entry_id'];
-                $en->exists = true;
+            $entry_id = isset($entry['entry_id']) && $entry['entry_id'] ? $entry['entry_id'] : $en->entry_id;
+            if (array_key_exists('deleted', $entry) && $entry['deleted']) { // 画像の削除
+                EntryImage::where('entry_id', $entry_id)->delete();
+                continue;
+            }    
+            $file = $request->file('entries');
+            if (!isset($file[$i]['image'])) { // 画像が設定されていない
+                continue;
             }
-            $en->save();
+            $path = $file[$i]['image']->store('public'); // e.g. $path='public/XXXXX.jpg';
+            $path = substr($path, 7);
+            $content = Storage::Disk('public')->get($path);
+            $im = new EntryImage;
+            $im->fill([
+                'entry_id' => $entry_id,
+                'cid' => 1, // TODO
+                'content' => $content,
+                'content_path' => $path,
+            ]);
+            if (EntryImage::find($entry_id)) {
+                $im->exists = true;
+            }
+            $im->save();
         }
         $fm = MFormula::find($formula_id);
         $questions = $fm->questions($chapter_id)->with('branches')->get();

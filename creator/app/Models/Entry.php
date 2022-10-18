@@ -38,4 +38,13 @@ class Entry extends Model
     protected $guarded = [
         'entry_id',
     ];
+
+    public function image()
+    {
+        return $this->hasOne(
+            EntryImage::class, 
+            'entry_id', 
+            'entry_id'
+        );
+    }
 }

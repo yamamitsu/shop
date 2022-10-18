@@ -84,7 +84,7 @@ class Document extends Model
             Entry::class,
             'document_id',
             'document_id'
-        )->get();
+        )->with('image')->get();
         if (!$entries) {
             return false;
         }

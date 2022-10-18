@@ -317,7 +317,7 @@ INSERT INTO m_chapters (chapter_id, parent_id, title) VALUES
 INSERT INTO m_questions (question_id, mode, parent_id, caption, subtext) VALUES 
 (1, 1, NULL, '総論', NULL)
 ,(2, 3, NULL, '基本方針', '本計画に関する基本方針を以下のとおりとする。')
-,(3, 1, NULL, '全体像', '自然災害(地震・水害等)BCPのフローチャート')
+,(3, 2, NULL, '全体像', '自然災害(地震・水害等)BCPのフローチャート')
 ,(4, 1, NULL, '推進体制', '（平常時の災害対策の推進体制を記載する。）')
 ,(5, 1, NULL, 'リスクの把握', NULL)
 ,(6, 1, 5, '（1）ハザードマップなどの確認', NULL)

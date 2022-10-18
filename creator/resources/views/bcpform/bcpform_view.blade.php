@@ -29,8 +29,8 @@ $entryCount = 0;
           @endif
           @if ($q->branches)
             @foreach ($q->branches as $b)
-              @if ($q->mode == 1 || $q->mode == 1) {{-- 通常のtextarea --}}
-                <section>
+              @if ($q->mode == 1 || $q->mode == 3) {{-- 通常のtextarea --}}
+                <section data:mode="1">
                   <template id="default_{{$entryCount}}">{{ $b->content }}</template>
                   <input type="hidden" name="entries[{{ $entryCount }}][question_id]" value="{{ $q->question_id }}" />
                   <input type="hidden" name="entries[{{ $entryCount }}][branch_id]" value="{{ $b->branch_id }}" />
@@ -44,14 +44,23 @@ $entryCount = 0;
                 </section>
               @endif
               @if ($q->mode == 2) {{-- 画像アップロード --}}
-                <section>
+                <section data:mode="2">
                   <input type="hidden" name="entries[{{ $entryCount }}][question_id]" value="{{ $q->question_id }}" />
                   <input type="hidden" name="entries[{{ $entryCount }}][branch_id]" value="{{ $b->branch_id }}" />
-                  @if (count($entries) > 1)
+                  <input type="hidden" name="entries[{{ $entryCount }}][for_image]" value="1" />
+                  @if (count($entries) > 1 && isset($entries[$b->branch_id]))
+                    @if ($entries[$b->branch_id]->image)
+                      <image src="/document/showImage/{{$entries[$b->branch_id]->entry_id}}" />
+                    @endif
+                    <input id="entry_file_{{$entryCount}}" type="file" name="entries[{{ $entryCount }}][image]" />
+                    <label for="entry_file_{{$entryCount}}">画像ファイルを指定してください</label>
                     <input type="hidden" name="entries[{{ $entryCount }}][entry_id]" value="{{ $entries[$b->branch_id]->entry_id }}" />
                     <input id="entry_chedk_{{$entryCount}}"  type="checkbox" style="margin-top: 5px;" onclick="checkAdditional({{$entryCount}})" name="entries[{{ $entryCount }}][deleted]" value="1">
                     <label for="entry_chedk_{{$entryCount}}">削除する</label>
                   @else
+                    <image id="entry_image_{{$entryCount}}" />
+                    <input id="entry_file_{{$entryCount}}" type="file" name="entries[{{ $entryCount }}][image]" onchange="imagePreview({{$entryCount}})" />
+                    <label for="entry_file_{{$entryCount}}">画像ファイルを指定してください</label>
                   @endif
                 </section>
               @endif
@@ -132,6 +141,12 @@ $entryCount = 0;
           btn.classList.remove('btn-info')
           btn.classList.add('btn-light')
         }
+    }
+
+    function imagePreview(entryCount) {
+      const image = document.getElementById('entry_image_'+entryCount)
+      const file = document.getElementById('entry_file_'+entryCount)
+      image.src = URL.createObjectURL(event.target.files[0])
     }
   </script>
 @endsection
