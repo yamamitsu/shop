@@ -7,15 +7,14 @@ $entryCount = 0;
   <h2>BCP入力欄</h2>
   <article>
     {{ $chapter->title }}(章ID:{{$chapter->chapter_id}})
-    <form action="/bcpform/confirm/{{$chapter->chapter_id}}" method="POST">
+    <form action="/bcpform/confirm/{{$chapter->chapter_id}}" method="POST"
+      enctype="multipart/form-data">
     @csrf
     @foreach ($questions as $q)
     
       @if ($q->mode == 1) {{-- 通常設問 --}}
       @endif
       
-      @if ($q->mode == 2) {{-- 画像アップロード --}}
-      @endif
       
       <div class="row">
         <div class="col-1"></div>
@@ -30,18 +29,32 @@ $entryCount = 0;
           @endif
           @if ($q->branches)
             @foreach ($q->branches as $b)
-              <section>
-                <template id="default_{{$entryCount}}">{{ $b->content }}</template>
-                <input type="hidden" name="entries[{{ $entryCount }}][question_id]" value="{{ $q->question_id }}" />
-                <input type="hidden" name="entries[{{ $entryCount }}][branch_id]" value="{{ $b->branch_id }}" />
-                @if (count($entries) > 1)
-                  <input type="hidden" name="entries[{{ $entryCount }}][entry_id]" value="{{ $entries[$b->branch_id]->entry_id }}" />
-                  <textarea id="entry_{{$entryCount}}" class="form-control col-12 bg-primary bg-opacity-10" name="entries[{{ $entryCount }}][content]">{{ $entries[$b->branch_id]->content }}</textarea>
-                @else {{-- entriesが入力されていない場合はマスターの初期値をそのまま出す --}}
-                  <textarea id="entry_{{$entryCount}}" class="form-control col-12 bg-primary bg-opacity-10" name="entries[{{ $entryCount }}][content]">{{ $b->content }}</textarea>
-                @endif
-                <button id="btn_reset_entry_{{$entryCount}}" class="btn btn-light float-end" style="margin-top: 5px;" onclick="resetText({{$entryCount}})" type="button">元に戻す</button>
-              </section>
+              @if ($q->mode == 1 || $q->mode == 1) {{-- 通常のtextarea --}}
+                <section>
+                  <template id="default_{{$entryCount}}">{{ $b->content }}</template>
+                  <input type="hidden" name="entries[{{ $entryCount }}][question_id]" value="{{ $q->question_id }}" />
+                  <input type="hidden" name="entries[{{ $entryCount }}][branch_id]" value="{{ $b->branch_id }}" />
+                  @if (count($entries) > 1)
+                    <input type="hidden" name="entries[{{ $entryCount }}][entry_id]" value="{{ $entries[$b->branch_id]->entry_id }}" />
+                    <textarea id="entry_{{$entryCount}}" class="form-control col-12 bg-primary bg-opacity-10" name="entries[{{ $entryCount }}][content]">{{ $entries[$b->branch_id]->content }}</textarea>
+                  @else {{-- entriesが入力されていない場合はマスターの初期値をそのまま出す --}}
+                    <textarea id="entry_{{$entryCount}}" class="form-control col-12 bg-primary bg-opacity-10" name="entries[{{ $entryCount }}][content]">{{ $b->content }}</textarea>
+                  @endif
+                  <button id="btn_reset_entry_{{$entryCount}}" class="btn btn-light float-end" style="margin-top: 5px;" onclick="resetText({{$entryCount}})" type="button">元に戻す</button>
+                </section>
+              @endif
+              @if ($q->mode == 2) {{-- 画像アップロード --}}
+                <section>
+                  <input type="hidden" name="entries[{{ $entryCount }}][question_id]" value="{{ $q->question_id }}" />
+                  <input type="hidden" name="entries[{{ $entryCount }}][branch_id]" value="{{ $b->branch_id }}" />
+                  @if (count($entries) > 1)
+                    <input type="hidden" name="entries[{{ $entryCount }}][entry_id]" value="{{ $entries[$b->branch_id]->entry_id }}" />
+                    <input id="entry_chedk_{{$entryCount}}"  type="checkbox" style="margin-top: 5px;" onclick="checkAdditional({{$entryCount}})" name="entries[{{ $entryCount }}][deleted]" value="1">
+                    <label for="entry_chedk_{{$entryCount}}">削除する</label>
+                  @else
+                  @endif
+                </section>
+              @endif
               @php
                 $entryCount++;
               @endphp

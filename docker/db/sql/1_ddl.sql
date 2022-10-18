@@ -284,6 +284,7 @@ CREATE TABLE `entry_images`
     `entry_id`   INT NOT NULL                        COMMENT '入力内容ID',
     `cid`        INT NOT NULL                        COMMENT '契約ID',
     `content`    MEDIUMBLOB NOT NULL                 COMMENT '添付データ',
+    `content_path` VARCHAR(100) DEFAULT NULL         COMMENT 'ウェブサーバー上にファイルとして保存したときのファイルPATH。アクセス前に存在チェックが必須',
     `memo`       TEXT DEFAULT NULL                   COMMENT '本文',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修正日時',
