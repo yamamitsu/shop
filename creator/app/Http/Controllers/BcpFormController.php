@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\NormalPageFormRequest;
+use App\Service\DocumentService;
+use App\Entity\DocumentContext;
 use App\Models\Document;
 use App\Models\Entry;
 use App\Models\EntryImage;
@@ -21,31 +23,29 @@ use App\Models\MFormula;
  */
 class BcpFormController extends Controller
 {
+    /** @var DocumentService */
+    private $documentService;
+
+    public function __construct(
+        DocumentService $documentService
+    ) {
+        $this->documentService = $documentService;
+    }
     /**
      * 特定の章の入力欄を表示
      */
     public function view (int $chapter_id)
     {
-        // 指定した書式IDから設問一覧を取得してviewに渡す
-        $formula_id = MFormula::getCurrentId();
-        $document_id = Document::getCurrentId();
-        $fm = MFormula::find($formula_id);
-        $questions = $fm->questions($chapter_id)->with('branches')->get();
-
-        // 章の設問でcontrollerが設定されている場合はそのContollerに処理を移譲する
-        foreach($questions as $i => $q) {
-            if ($i == 0 && $q->controller) {
-                return redirect()->action(
-                    "App\\Http\\Controllers\\{$q->controller}Controller@view", 
-                    ['chapter_id' => $chapter_id]
-                );
-            }
+        $doccont = new DocumentContext(MFormula::getCurrentId(), $chapter_id, Document::getCurrentId());
+        $result = $this->documentService->getQuestionsOfChapterWithCheck($doccont);
+        // Questionにcontrollerが設定されている場合は処理を中断してそのコントローラーにリダイレクトする
+        if ($result->redirect) {
+            return redirect()->action(
+                "App\\Http\\Controllers\\{$result->controller}Controller@view", 
+                ['chapter_id' => $chapter_id]
+            );
         }
-        $chapter = MChapter::find($chapter_id);
-        $document = Document::find($document_id);
-        $entries = $document->entriesForBranches();
-
-        return view('bcpform/bcpform_view', compact('document_id', 'chapter', 'questions', 'entries'));
+        return view('bcpform/bcpform_view', $result->compact);
     }
 
     /**
