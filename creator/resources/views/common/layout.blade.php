@@ -31,6 +31,14 @@
             h4 {
                 padding-top: 10px;
             }
+            .bcp-image-input {
+                position: relative;
+                padding: 1rem;
+                /* margin: 1rem -0.75rem 0; */
+                margin: 0px;
+                border: 1px solid #dee2e6;
+                border-radius: 0.375rem;
+            }
         </style>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
     </head>
