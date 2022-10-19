@@ -9,6 +9,7 @@ use App\Models\Entry;
 use App\Models\EntryImage;
 use App\Models\MChapter;
 use App\Models\MFormula;
+use App\Models\MFormulaQuestions;
 
 /**
  * ドキュメントサービス
@@ -45,9 +46,15 @@ class DocumentService
         $document = Document::find($doccont->document_id);
         $entries = $document->entriesForBranches();
 
+        // $chapters[question_id] -> chapter_id
+        // $formulaQuestions = MFormulaQuestions::findChaptersAndQuestionsOfFormula($doccont->formula_id)->get();
+        $chapters = [];
+        // foreach($formulaQuestions as $fq) {
+        //     $chapters[$fq->question_id] = $fq->chapter_id;
+        // }
         return (object)[
             'redirect' => false,
-            'compact' => compact('document_id', 'chapter', 'questions', 'entries')
+            'compact' => compact('document_id', 'chapter', 'chapters', 'questions', 'entries')
         ];
     }
 }

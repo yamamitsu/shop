@@ -22,7 +22,7 @@ $entryCount = 0;
           @if ($q->parent_id) {{-- サブ設問 --}}
             <h4 id="question{{ $chapter->chapter_id }}_{{ $q->question_id }}">{{ $q->caption }}</h4>
           @else {{-- メイン設問 --}}
-            <h3 id="question{{ $chapter->chapter_id }}_{{ $q->question_id }}">{{ $q->question_id }}: {{ $q->caption }}</h3>
+            <h3 id="subchapter_{{ $q->question_id }}">{{ $q->question_id }}: {{ $q->caption }}</h3>
           @endif
           @if ($q->subtext)
             <p >{{ $q->subtext }}</p>

@@ -7,6 +7,7 @@ use App\Models\Document;
 use App\Models\Entry;
 use App\Models\MChapter;
 use App\Models\MFormula;
+use App\Models\MFormulaQuestions;
 
 /**
  * BCP書式の章を表示するページのコントローラー
@@ -40,7 +41,15 @@ class ChapterController extends Controller
         $fm = MFormula::find($formula_id);
         $chapters = $fm->chapters()->get();
 
+        $formulaQuestions = MFormulaQuestions::findChaptersAndQuestionsOfFormula($formula_id)->get();
+        $questions = [];
+        foreach($formulaQuestions as $fq) {
+            if (!isset($questions[$fq->chapter_id])) {
+                $questions[$fq->chapter_id] = $fq->question->question_id;
+            }
+        }
 
-        return view('chapter/chapter_index', compact('chapters'));
+
+        return view('chapter/chapter_index', compact('chapters', 'questions'));
     }
 }
