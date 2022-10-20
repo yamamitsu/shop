@@ -60,68 +60,42 @@ class BcpFormController extends Controller
         // 指定した書式IDから設問一覧を取得してviewに渡す
         $formula_id = MFormula::getCurrentId();
         $document_id = Document::getCurrentId();
+        $doccont = new DocumentContext(MFormula::getCurrentId(), $chapter_id, Document::getCurrentId());
         $entries = $request->input('entries');
+        $file = $request->file('entries');
 
         // 入力内容がないのはおかしい
         if (!$entries) {
             return redirect()->action('App\Http\Controllers\BcpFormController@view', ['chapter_id' => $chapter_id]);
         }
-
-        // TODO: Service系にこの実装を移譲させる必要がある
         foreach($entries as $i => $entry) {
             if (!isset($entry['for_image']) && !$entry['content'] && !isset($entry['entry_id'])) {
-                continue; // 入力欄が空の追加入力欄は無視する
+                continue; // 入力欄が空の追加入力欄は無視する。ただし画像投稿欄(for_image==1)の場合は継続する
             }
             $en = null;
+            $entry_id = isset($entry['entry_id']) ? $entry['entry_id'] : null;
             if (array_key_exists('deleted', $entry) && $entry['deleted']) { // 手動追加項目の削除
-                Entry::where('entry_id', $entry['entry_id'])->delete();
+                //Entry::where('entry_id', $entry['entry_id'])->delete();
+                $this->documentService->deleteEntry($entry_id);
             } else {
-                $en = new Entry;
-                $en->fill([
-                    'cid' => 1, // TODO
-                    'document_id' => $document_id,
-                    'chapter_id' => $chapter_id,
-                    'question_id' => $entry['question_id'],
-                    'branch_id' => isset($entry['branch_id']) ? $entry['branch_id'] : null,
-                ]);
-                if (isset($entry['content']) && $entry['content']) {
-                    $en->content = $entry['content'];
-                }
-                if (isset($entry['entry_id']) && $entry['entry_id']) {
-                    $en->entry_id = $entry['entry_id'];
-                    $en->exists = true;
-                }
-                $en->save();
+                $entry_id = $this->documentService->saveEntry($doccont, $entry);
             }
 
             // 画像がアップロードされている
             if (!isset($entry['for_image'])) {
                 continue;
             }
-            $entry_id = isset($entry['entry_id']) && $entry['entry_id'] ? $entry['entry_id'] : $en->entry_id;
             if (array_key_exists('deleted', $entry) && $entry['deleted']) { // 画像の削除
-                EntryImage::where('entry_id', $entry_id)->delete();
+                //EntryImage::where('entry_id', $entry_id)->delete();
+                $this->documentService->deleteEntryImage($entry_id);
                 continue;
-            }    
-            $file = $request->file('entries');
+            }
             if (!isset($file[$i]['image'])) { // 画像が設定されていない
                 continue;
             }
-            $path = $file[$i]['image']->store('public'); // e.g. $path='public/XXXXX.jpg';
-            $path = substr($path, 7);
-            $content = Storage::Disk('public')->get($path);
-            $im = new EntryImage;
-            $im->fill([
-                'entry_id' => $entry_id,
-                'cid' => 1, // TODO
-                'content' => $content,
-                'content_path' => $path,
-            ]);
-            if (EntryImage::find($entry_id)) {
-                $im->exists = true;
-            }
-            $im->save();
+            $this->documentService->saveEntryImage($doccont, $entry_id, $entry, $file[$i]['image']);
         }
+
         $fm = MFormula::find($formula_id);
         $questions = $fm->questions($chapter_id)->with('branches')->get();
         $chapter = MChapter::find($chapter_id);

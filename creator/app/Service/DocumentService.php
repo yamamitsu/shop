@@ -46,15 +46,86 @@ class DocumentService
         $document = Document::find($doccont->document_id);
         $entries = $document->entriesForBranches();
 
-        // $chapters[question_id] -> chapter_id
-        // $formulaQuestions = MFormulaQuestions::findChaptersAndQuestionsOfFormula($doccont->formula_id)->get();
-        $chapters = [];
-        // foreach($formulaQuestions as $fq) {
-        //     $chapters[$fq->question_id] = $fq->chapter_id;
-        // }
         return (object)[
             'redirect' => false,
-            'compact' => compact('document_id', 'chapter', 'chapters', 'questions', 'entries')
+            'compact' => compact('document_id', 'chapter', 'questions', 'entries')
         ];
+    }
+
+    /**
+     * 入力内容テーブルentriesにレコードを保存または更新する
+     *
+     * @param DocumentContext $doccont
+     * @param array $entry
+     * @return int entries.entry_id
+     */
+    public function saveEntry(DocumentContext $doccont, array $entry)
+    {
+        $en = new Entry;
+        $en->fill([
+            'cid' => $doccont->cid,
+            'document_id' => $doccont->document_id,
+            'chapter_id' => $doccont->chapter_id,
+            'question_id' => $entry['question_id'],
+            'branch_id' => isset($entry['branch_id']) ? $entry['branch_id'] : null,
+        ]);
+        if (isset($entry['content']) && $entry['content']) {
+            $en->content = $entry['content'];
+        }
+        // entry_idが存在する場合は既存データなので上書処理に切り替える
+        if (isset($entry['entry_id']) && $entry['entry_id']) {
+            $en->entry_id = $entry['entry_id'];
+            $en->exists = true;
+        }
+        $en->save();
+        return $en->entry_id;
+    }
+
+    /**
+     * 入力内容テーブルentriesのレコードを削除する
+     *
+     * @param int $entry_id
+     */
+    public function deleteEntry($entry_id)
+    {
+        return Entry::where('entry_id', $entry_id)->delete();
+    }
+
+    /**
+     * 入力内容添付ファイルテーブルentriy_imagesにレコードを保存または更新する
+     *
+     * @param DocumentContext $doccont
+     * @param int $entry_id
+     * @param array $entry
+     * @param UploadedFile $file
+     * @return int entries.entry_id
+     */
+    public function saveEntryImage(DocumentContext $doccont, int $entry_id, array $entry, $file)
+    {
+        $path = $file->store('public'); // e.g. $path='public/XXXXX.jpg';
+        $path = substr($path, 7);
+        // アップロードされたファイルデータの取得
+        $content = Storage::Disk('public')->get($path);
+        $im = new EntryImage;
+        $im->fill([
+            'entry_id' => $entry_id,
+            'cid' => $doccont->cid,
+            'content' => $content,
+            'content_path' => $path,
+        ]);
+        if (EntryImage::find($entry_id)) {
+            $im->exists = true;
+        }
+        $im->save();
+    }
+
+    /**
+     * 入力内容添付ファイルテーブルentriy_imagesのレコードを削除する
+     *
+     * @param int $entry_id
+     */
+    public function deleteEntryImage($entry_id)
+    {
+        return EntryImage::where('entry_id', $entry_id)->delete();
     }
 }
