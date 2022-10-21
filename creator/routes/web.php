@@ -30,6 +30,10 @@ Route::get('/bcpform/{chapter_id}', [BcpFormController::class, 'view']);
 // BCP本文１章分の入力結果の表示
 Route::post('/bcpform/confirm/{chapter_id}', [BcpFormController::class, 'confirm']);
 
+// PDFのプレビュー表示
+Route::get('/document/preview/{entry_id}', [DocumentController::class, 'preview']);
+// PDFのダウンロード
+Route::get('/document/download/{entry_id}', [DocumentController::class, 'download']);
 // 入力内容に関連付けられた画像の表示
 Route::get('/document/showImage/{entry_id}', [DocumentController::class, 'showImage']);
 // // 地図画像入力ページの表示

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Document;
 use App\Models\Entry;
 use App\Models\EntryImage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 /**
  * 選択したBCPドキュメントを表示したり印刷するコントローラー
@@ -14,6 +15,16 @@ use App\Models\EntryImage;
  */
 class DocumentController extends Controller
 {
+    public function preview($entry_id)
+    {
+        return view('pdf_template/document_preview', compact('entry_id'));
+    }
+    public function download($entry_id)
+    {
+        $pdf = Pdf::loadView('pdf_template/document_preview', compact('entry_id'));
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->download('invoice.pdf');
+    }
     /**
      * entry_imagesに格納された画像データを返す(imageタグ用)
      *
