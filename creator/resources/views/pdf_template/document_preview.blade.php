@@ -28,13 +28,13 @@
         src:url('{{ storage_path('fonts/ipag.ttf')}}') format('truetype');
       }
       @font-face{
-        font-family: ipamp, sans-serif;
+        font-family: ipamp;
         font-style: normal;
         font-weight: normal;
         src:url('{{ storage_path('fonts/ipamp.ttf')}}') format('truetype');
       }
       @font-face{
-        font-family: ipamp, sans-serif;
+        font-family: ipamp;
         font-style: bold;
         font-weight: bold;
         src:url('{{ storage_path('fonts/ipamp.ttf')}}') format('truetype');
@@ -86,7 +86,9 @@
       article section {
         font-family: ipamp;
         font-size: 11pt;
+        text-align: justify;
         /* word-break: keep-all; */
+        /* white-space: pre-line; */
         line-break: strict;
         word-wrap: break-word;
         /* overflow-wrap: break-word; */
@@ -108,9 +110,9 @@
           <div>
             {{-- <div class="col-2"></div> --}}
               <section>
-                <p>地震のみならず、大型台風、集中豪雨、大雪による被害など多くの災害を経験し、 近年の我が国は常に自然災害と隣り合わせの状況にあります。地球温暖化による影響も考えられ、事前の予測も難しく、今後も自然災害の発生リスクは一層高まっていっても過言ではありません。</p>
+                <p>地震のみならず、大型台風、集中豪雨、大雪による被害など多くの災害を経験し、近年の我が国は常に自然災害と隣り合わせの状況にあります。地球温暖化による影響も考えられ、事前の予測も難しく、今後も自然災害の発生リスクは一層高まっていっても過言ではありません。</p>
                 
-<p>そのような中、福祉用具関連サービスは、要介護者、その家族等の生活を支える上で欠かせないものであり、もし突発的な経営環境の変化など不測の事態が発生しても、被害を最小限に食い止め、その後も利用者に必要なサービスを継続的に提供できる体制を構築し備えておくことが重要です。必要な時に必要な福祉用具を必要とされている方に適切な対応と適切に供給できるように、平時から重要な事業を中断させない、あるいは中断しても可能な限り短い期間で復旧させ優先業務 を実施できるための方針、体制、手順等を示した計画をあらかじめ検討して準備や訓練をしておくことが重要です。</p>
+<p>そのような中、福祉用具関連サービスは、要介護者、その家族等の生活を支える上で欠かせないものであり、もし突発的な経営環境の変化など不測の事態が発生しても、被害を最小限に食い止め、その後も利用者に必要なサービスを継続的に提供できる体制を構築し備えておくことが重要です。必要な時に必要な福祉用具を必要とされている方に適切な対応と適切に供給できるように、平時から重要な事業を中断させない、あるいは中断しても可能な限り短い期間で復旧させ優先業務を実施できるための方針、体制、手順等を示した計画をあらかじめ検討して準備や訓練をしておくことが重要です。</p>
               </section>
             </div>
           </div>
