@@ -105,11 +105,13 @@ ROW_FORMAT=DEFAULT;
 CREATE TABLE `m_questions`
 (
     `question_id` INT NOT NULL AUTO_INCREMENT        COMMENT '項目ID',
+    `parent_id`  INT DEFAULT NULL                    COMMENT '親の章ID。トップレベルの場合はNULL',
     `first_id`   INT DEFAULT NULL                    COMMENT '初代の項目ID。改訂版の場合に初代の項目IDを指定する',
     `version`    INT NOT NULL DEFAULT 100            COMMENT 'バージョン数(大きいほど新しい。原則100刻み)',
-    `mode`       TINYINT NOT NULL DEFAULT 1          COMMENT '設問の種別(1:通常設問, 2:画像添付, 10以上:専用書式)',
+    `mode`       TINYINT NOT NULL DEFAULT 1          COMMENT '設問の種別(1:通常設問, 2:画像添付, 3:追加可能設問, 10以上:専用書式)',
     `controller` VARCHAR(20) DEFAULT NULL            COMMENT 'コントローラー名',
-    `content`    TEXT NOT NULL                       COMMENT '本文',
+    `caption`    TEXT NOT NULL                       COMMENT '設問の表題',
+    `subtext`    TEXT DEFAULT NULL                   COMMENT '設問に付属するテキスト(オプション)',
     `hint`       TEXT DEFAULT NULL                   COMMENT 'ヒント(注釈として画面上に直接的、間接的に表示される)',
     `memo`       TEXT DEFAULT NULL                   COMMENT 'メモ',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
@@ -156,10 +158,11 @@ ROW_FORMAT=DEFAULT;
 -- DROP TABLE IF EXISTS `m_formula_questions`;
 CREATE TABLE `m_formula_questions`
 (
-    `formula_id`  INT NOT NULL                    COMMENT '入力書式ID',
-    `chapter_id`  INT NOT NULL                    COMMENT '章ID',
-    `question_id` INT NOT NULL                    COMMENT '項目ID',
-    `priority`    SMALLINT NOT NULL               COMMENT '表示順(大きいほど優先)',
+    `formula_id`       INT NOT NULL               COMMENT '入力書式ID',
+    `chapter_id`       INT NOT NULL               COMMENT '章ID',
+    `question_id`      INT NOT NULL               COMMENT '項目ID',
+    `main_chapter_id`  INT NOT NULL               COMMENT 'メインの章ID(サブの章IDの場合、異なる値になる)',
+    `priority`         SMALLINT NOT NULL          COMMENT '表示順(大きいほど優先)',
     PRIMARY KEY (`formula_id`, `chapter_id`, `question_id`)
 )
 COMMENT='ドキュメント設問関連マスタ'
@@ -172,6 +175,8 @@ ROW_FORMAT=DEFAULT;
 -- テーブルの構造 `m_branches`
 -- BCPの設問は複数の入力欄から構成される
 --
+-- 章、および設問についてはエンドユーザーが増減することはできないが、
+-- 入力欄については必要に応じてエンドユーザーが追加することができる。
 -- DROP TABLE IF EXISTS `m_branches`;
 CREATE TABLE `m_branches`
 (
@@ -280,6 +285,7 @@ CREATE TABLE `entry_images`
     `entry_id`   INT NOT NULL                        COMMENT '入力内容ID',
     `cid`        INT NOT NULL                        COMMENT '契約ID',
     `content`    MEDIUMBLOB NOT NULL                 COMMENT '添付データ',
+    `content_path` VARCHAR(100) DEFAULT NULL         COMMENT 'ウェブサーバー上にファイルとして保存したときのファイルPATH。アクセス前に存在チェックが必須',
     `memo`       TEXT DEFAULT NULL                   COMMENT '本文',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修正日時',
@@ -289,79 +295,3 @@ COMMENT='入力内容添付ファイルテーブル'
 COLLATE='utf8mb4_general_ci'
 ENGINE=InnoDB
 ROW_FORMAT=DEFAULT;
-
-INSERT INTO m_customers (cid, user_id, passcode, memo, expired_at) VALUES 
-(1, 'test', '$2y$10$wGcM7TMgHZ9Cr0jPpioTIOGAqFfUniRKQAT45vUbXwx.0fwi1c9dy', 'テストユーザー', DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 1 YEAR));
-
-INSERT INTO m_formula (formula_id, title, memo, valid_flag) VALUES 
-(1, 'BCP入力書式2020年10月版', 'テスト用入力書式', 1);
-
-INSERT INTO m_chapters (chapter_id, parent_id, title) VALUES 
-(1, NULL, '総論')
-,(2, 1, '基本方針')
-,(3, 1, '全体像')
-,(4, 1, '推進体制')
-,(5, 1, 'リスクの把握')
-,(6, 1, '優先業務の選定')
-,(7, NULL, '研修・訓練の実施、ＢＣＰの検証・見直し')
-,(8, NULL, '平常時の対応')
-,(56, NULL, 'ハザードマップ')
-;
-
-
-INSERT INTO m_questions (question_id, content) VALUES 
-(1, 'BCPの総論を記入します。(1)')
-,(2, '基本方針を記入します。(2)')
-,(3, '全体像')
-,(4, '推進体制')
-,(5, 'リスクの把握')
-,(6, '優先業務の選定')
-;
-INSERT INTO m_questions (question_id, controller, content) VALUES 
-(151, 'MapUpload', '地震')
-,(152, 'MapUpload', '津波')
-,(153, 'MapUpload', '液状化')
-,(154, 'MapUpload', '土砂崩れ')
-,(155, 'MapUpload', '水害(洪水)')
-,(156, 'MapUpload', '高潮、溜池等')
-;
-
-INSERT INTO m_branches (branch_id, question_id, priority, content, hint) VALUES 
-(1, 1, 10, '地震のみならず、大型台風、集中豪雨、大雪による被害など多くの災害を経験し、近年の我が国は常に自然災害と隣り合わせの状況にあります。地球温暖化による影響も考えられ、事前の予測も難しく、今後も自然災害の発生リスクは一層高まっていっても過言ではありません。
-
- そのような中、福祉用具関連サービスは、要介護者、その家族等の生活を支える上で欠かせないものであり、もし突発的な経営環境の変化など不測の事態が発生しても、被害を最小限に食い止め、その後も利用者に必要なサービスを継続的に提供できる体制を構築し備えておくことが重要です。必要な時に必要な福祉用具を必要とされている方に適切な対応と適切に供給できるように、平時から重要な事業を中断させない、あるいは中断しても可能な限り短い期間で復旧させ優先業務を実施できるための方針、体制、手順等を示した計画をあらかじめ検討して準備や訓練をしておくことが重要です。', NULL)
-,(2, 2, 40, '福祉用具のご利用や住環境整備の対象の方々は、重症化リスクが高く、災害発生時に深刻な人的被害が生じるおそれがあることに留意し、「利用者の安全を守るための対策およびその確保」が何よりも重要となります。', '①ご利用者の安全確保')
-,(3, 2, 30, '従業員の生命を守り、生活の維持に努める。 自然災害発生時や復旧において業務継続を図ることは、長時間勤務や精神的打撃など従業員の労働環境が過酷にあることが懸念されます。したがって、従業員の過重労働やメンタルヘルス対応への適切な措置を講じることが使用者の責務となります。', '②従業員の安全確保')
-,(4, 2, 20, 'ご利用者の生命、身体の安全、健康、生活を守るために最低限必要となるサービス機能を維持する。    （重要な事業を中断させない、または中断しても可能な限り短い時間で復旧させる。）', '③サービスの継続')
-,(5, 2, 10, '介護事業者の社会福祉活動の公共性を鑑みると、無事であることを前提に、事業者がもつ機能を活かして被災時に地域へ貢献することも重要な役割となります。', '④地域への貢献')
-,(6, 3, 10, '【ポイント】
-１．総論、２．平常時の対応、３．緊急時の対応、４．他施設との連携、５．地域との連携の順に検討する。', '自然災害(地震・水害等)BCPのフローチャート')
-,(7, 4, 20, '災害対策は一過性のものではなく、日頃から継続して取り組む必要がある。また災害対策の推進には、総務部などの一部門で進めるのではなく、多くの部門が関与することが効果的である。
-【様式１】推進体制の構成メンバーに体制を記入する。', '●継続的かつ効果的に取組みを進めるために推進体制を構築する。')
-,(8, 4, 10, 'ここでは平常時における災害対策や事業継続の検討・策定や各種取組を推進する体制を記載する。', '被災した場合の対応体制は「３．緊急時の対応」の項目に記載する。')
-;
-
-INSERT INTO m_formula_chapters (formula_id, chapter_id, idx, priority) VALUES 
-(1, 1, '1.', 90)
-,(1, 2, '1.1', 80)
-,(1, 3, '1.2', 70)
-,(1, 7, '2.', 20)
-,(1, 8, '3.', 10)
-,(1, 56, '補足6', 5)
-;
-INSERT INTO m_formula_questions (formula_id, chapter_id, question_id, priority) VALUES 
-(1, 1, 1, 90)
-,(1, 1, 2, 80)
-,(1, 1, 3, 70)
-,(1, 1, 4, 60)
-,(1, 1, 5, 50)
-,(1, 1, 6, 40)
-;
-INSERT INTO m_formula_questions (formula_id, chapter_id, question_id, priority) VALUES 
-(1, 56, 151, 9)
-,(1, 56, 152, 8)
-,(1, 56, 153, 7)
-,(1, 56, 154, 6)
-,(1, 56, 155, 5)
-,(1, 56, 156, 4)
-;

@@ -1,0 +1,8 @@
+*.ttf
+*.ufm
+*.json
+
+!ipag.ttf
+!ipagp.ttf
+!ipam.ttf
+!ipamp.ttf

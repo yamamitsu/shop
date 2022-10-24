@@ -16,7 +16,13 @@
           @if (is_null($c->parent_id) && !is_null($parent_id))
             </ul>
           @endif
-          <li>{{ $c->pivot->idx }} <a href="/bcpform/{{ $c->chapter_id }}">{{ $c->title }}</a></li>
+          @if (!$c->parent_id) {{-- 各章 --}}{{-- 各章内の節項目 --}}
+            <li>{{ $c->pivot->idx }} <a href="/bcpform/{{ $c->chapter_id }}">{{ $c->title }}</a></li>
+          @elseif (isset($questions[$c->chapter_id]))
+            <li>{{ $c->pivot->idx }} <a href="/bcpform/{{ $c->parent_id }}#subchapter_{{ $questions[$c->chapter_id] }}">{{ $c->title }}</a></li>
+          @else
+            <li>{{ $c->pivot->idx }} {{ $c->title }}</li>
+          @endif
           @php
             $parent_id = $c->parent_id;
           @endphp

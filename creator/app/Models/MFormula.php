@@ -69,7 +69,7 @@ class MFormula extends Model
             'formula_id', 
             'question_id'
             )
-            ->where('chapter_id', $chapter_id)
+            ->where('main_chapter_id', $chapter_id)
             ->orderBy('m_formula_questions.priority', 'DESC');
     }
 }

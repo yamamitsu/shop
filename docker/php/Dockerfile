@@ -2,8 +2,8 @@ FROM php:8.1-fpm
 COPY php.ini /usr/local/etc/php/
 
 RUN apt-get update \
-  && apt-get install -y zlib1g-dev mariadb-client vim libzip-dev \
-  && docker-php-ext-install zip pdo_mysql
+  && apt-get install -y zlib1g-dev mariadb-client vim libzip-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libmcrypt-dev \
+  && docker-php-ext-install zip pdo_mysql gd iconv exif
 RUN pecl install xdebug
 #Composer install
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
