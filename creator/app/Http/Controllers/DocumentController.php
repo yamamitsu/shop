@@ -23,7 +23,23 @@ class DocumentController extends Controller
     {
         $pdf = Pdf::loadView('pdf_template/document_preview', compact('entry_id'));
         $pdf->setPaper('A4', 'portrait');
+        // $pdf->render();
+        // $pdf->loadView('pdf_template/document_preview', compact('entry_id'));
+        // $pdf->setPaper('A4', 'landscape');
         return $pdf->download('invoice.pdf');
+    }
+    /**
+     * BCP文書の目次ページのプレビュー表示
+     */
+    public function chapter()
+    {
+        return view('pdf_template/document_chapter', []);
+    }
+    public function chapterDownload()
+    {
+        $pdf = Pdf::loadView('pdf_template/document_chapter', []);
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->download('chapter.pdf');
     }
     /**
      * entry_imagesに格納された画像データを返す(imageタグ用)
