@@ -1,11 +1,26 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>新規登録</title>
 </head>
 <body>
     <h1>新規登録</h1>
-    <a href="/register/main">登録</a>
+    
+    <form th:action="@{/register/main}" method="post" th:object="${userForm}">
+         <table>
+            <tr><td><div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red"></div></td></tr>
+            <tr><td>名前[必須]</td><td><input type="text" th:field="*{name}"></td></tr>
+            <tr><td>郵便番号</td><td><input type="text" th:field="*{postalCode}"></td></tr>
+            <tr><td>住所</td><td><input type="text" th:field="*{address}"></td></tr>
+            <tr><td>電話番号</td><td><input type="text" th:field="*{phoneNumber}"></td></tr>
+            <tr><td><div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red"></div></td></tr>
+            <tr><td><div th:text="${caution}" style="color:red"></div></td></tr>
+            <tr><td>メールアドレス[必須]</td><td><input type="text" th:field="*{email}"></td></tr>
+            <tr><td><div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red"></div></td></tr>
+            <tr><td>パスワード[必須]</td><td><input type="text" th:field="*{password}"></td></tr>
+        </table>
+        <input type="submit" value="登録">
+    </form>
 </body>
 </html>
