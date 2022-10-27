@@ -28,144 +28,138 @@ COLLATE='utf8mb4_general_ci'
 ENGINE=InnoDB
 ROW_FORMAT=DEFAULT;
 
-INSERT INTO user (name, postal_code, address, phone_number, email, password, user_status) VALUES 
-('yamamitsu', '1234567', '京都府京都市', '1234567890', 'yamasuke.ry@gmail.com', 'password', 0);
+-- --------------------------------------------------------
+--
+-- テーブルの構造 `shipping_address`
+-- 
+-- DROP TABLE IF EXISTS `shipping_address`;
+CREATE TABLE `shipping_address`
+(
+    `shipping_address_id` INT NOT NULL AUTO_INCREMENT       COMMENT '配送先ID',
+    `user_id`       INT NOT NULL                            COMMENT 'ユーザーID',
+    `name`          VARCHAR(50) NOT NULL                    COMMENT '宛名',
+    `postal_code`   VARCHAR(255) NOT NULL                   COMMENT '配送先郵便番号',
+    `address`       VARCHAR(255) NOT NULL                   COMMENT '配送先住所',
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
+    `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
+    PRIMARY KEY (`shipping_address_id`),
+    FOREIGN KEY (`user_id`) REFERENCES user(`user_id`)
+)
+COMMENT='配送先マスタ'
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB
+ROW_FORMAT=DEFAULT;
 
+-- --------------------------------------------------------
+--
+-- テーブルの構造 `order`
+--
+-- DROP TABLE IF EXISTS `order`;
+CREATE TABLE `order`
+(
+    `order_id`      INT NOT NULL AUTO_INCREMENT             COMMENT '注文ID',
+    `user_id`       INT NOT NULL                            COMMENT 'ユーザーID',
+    `name`          VARCHAR(50) NOT NULL                    COMMENT '宛名',
+    `postal_code`   VARCHAR(255) NOT NULL                   COMMENT '配送先郵便番号',
+    `address`       VARCHAR(255) NOT NULL                   COMMENT '配送先住所',
+    `postage`       INT DEFAULT 800                         COMMENT '送料',
+    `total_price`   INT                                     COMMENT '請求額',
+    `payment_method`INT DEFAULT 0                           COMMENT '支払方法',
+    `order_status`  INT DEFAULT 0                           COMMENT '注文ステータス',
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
+    `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
+    PRIMARY KEY (`order_id`),
+    FOREIGN KEY (`user_id`) REFERENCES user(`user_id`)
+)
+COMMENT='注文マスタ'
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB
+ROW_FORMAT=DEFAULT;
 
+-- --------------------------------------------------------
+--
+-- テーブルの構造 `genre`
+--
+-- DROP TABLE IF EXISTS `genre`;
+CREATE TABLE `genre`
+(
+    `genre_id`      INT NOT NULL AUTO_INCREMENT             COMMENT 'ジャンルID',
+    `name`          VARCHAR(255)                            COMMENT 'ジャンル名',
+    `genre_status`  BOOLEAN DEFAULT false                   COMMENT 'ジャンルステータス',
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
+    `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
+    PRIMARY KEY (`genre_id`)
+)
+COMMENT='ジャンルマスタ'
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB
+ROW_FORMAT=DEFAULT;
 
+-- --------------------------------------------------------
+--
+-- テーブルの構造 `product`
+--
+-- DROP TABLE IF EXISTS `product`;
+CREATE TABLE `product`
+(
+    `product_id`    INT NOT NULL AUTO_INCREMENT            	COMMENT '商品ID',
+    `genre_id`      INT NOT NULL                           	COMMENT 'ジャンルID',
+    `name`          VARCHAR(255) NOT NULL                  	COMMENT '商品名',
+    `explanation`   VARCHAR(255)                               	COMMENT '商品説明',
+    `tax_out_price` INT NOT NULL                           	COMMENT '税抜価格',
+    `is_sale`       BOOLEAN NOT NULL DEFAULT false          COMMENT '販売ステータス(true:販売可, false:販売不可)',
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
+    `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
+    PRIMARY KEY (`product_id`),
+    FOREIGN KEY (`genre_id`) REFERENCES genre(`genre_id`)
+)
+COMMENT='商品マスタ'
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB
+ROW_FORMAT=DEFAULT;
 
--- -- --------------------------------------------------------
--- --
--- -- テーブルの構造 `shipping_address`
--- -- 
--- -- DROP TABLE IF EXISTS `shipping_address`;
--- CREATE TABLE `shipping_address`
--- (
---     `shipping_address_id` INT NOT NULL AUTO_INCREMENT       COMMENT '配送先ID',
---     `user_id`       INT NOT NULL                            COMMENT 'ユーザーID',
---     `name`          VARCHAR(50) NOT NULL                    COMMENT '宛名',
---     `postal_code`   VARCHAR(255) NOT NULL                   COMMENT '配送先郵便番号',
---     `address`       VARCHAR(255) NOT NULL                   COMMENT '配送先住所',
---     `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
---     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
---     PRIMARY KEY (`shipping_address_id`),
---     FOREIGN KEY (`user_id`) REFERENCES user(`user_id`)
--- )
--- COMMENT='配送先マスタ'
--- COLLATE='utf8mb4_general_ci'
--- ENGINE=InnoDB
--- ROW_FORMAT=DEFAULT;
+-- --------------------------------------------------------
+--
+-- テーブルの構造 `order_detail`
+--
+-- DROP TABLE IF EXISTS `order_detail`;
+CREATE TABLE `order_detail`
+(
+    `order_detail_id` INT NOT NULL AUTO_INCREMENT           COMMENT '注文明細ID',
+    `product_id`    INT NOT NULL                            COMMENT '商品ID',
+    `order_id`      INT NOT NULL                            COMMENT '注文ID',
+    `quantity`      INT                                     COMMENT '商品購入個数',
+    `subprice`      INT                                     COMMENT '購入時価格(税込み)',
+    `production_status` INT NOT NULL DEFAULT 0              COMMENT '制作ステータス',
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
+    `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
+    PRIMARY KEY (`order_detail_id`),
+    FOREIGN KEY (`product_id`) REFERENCES product(`product_id`),
+    FOREIGN KEY (`order_id`) REFERENCES `order`(`order_id`)
+)
+COMMENT='注文明細マスタ'
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB
+ROW_FORMAT=DEFAULT;
 
--- -- --------------------------------------------------------
--- --
--- -- テーブルの構造 `order`
--- --
--- -- DROP TABLE IF EXISTS `order`;
--- CREATE TABLE `order`
--- (
---     `order_id`      INT NOT NULL AUTO_INCREMENT             COMMENT '注文ID',
---     `user_id`       INT NOT NULL                            COMMENT 'ユーザーID',
---     `name`          VARCHAR(50) NOT NULL                    COMMENT '宛名',
---     `postal_code`   VARCHAR(255) NOT NULL                   COMMENT '配送先郵便番号',
---     `address`       VARCHAR(255) NOT NULL                   COMMENT '配送先住所',
---     `postage`       INT DEFAULT 800                         COMMENT '送料',
---     `total_price`   INT                                     COMMENT '請求額',
---     `payment_method`INT DEFAULT 0                           COMMENT '支払方法',
---     `order_status`  INT DEFAULT 0                           COMMENT '注文ステータス',
---     `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
---     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
---     PRIMARY KEY (`order_id`),
---     FOREIGN KEY (`user_id`) REFERENCES user(`user_id`)
--- )
--- COMMENT='注文マスタ'
--- COLLATE='utf8mb4_general_ci'
--- ENGINE=InnoDB
--- ROW_FORMAT=DEFAULT;
-
--- -- --------------------------------------------------------
--- --
--- -- テーブルの構造 `genre`
--- --
--- -- DROP TABLE IF EXISTS `genre`;
--- CREATE TABLE `genre`
--- (
---     `genre_id`      INT NOT NULL AUTO_INCREMENT             COMMENT 'ジャンルID',
---     `name`          VARCHAR(255)                            COMMENT 'ジャンル名',
---     `genre_status`  BOOLEAN DEFAULT false                   COMMENT 'ジャンルステータス',
---     `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
---     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
---     PRIMARY KEY (`genre_id`)
--- )
--- COMMENT='ジャンルマスタ'
--- COLLATE='utf8mb4_general_ci'
--- ENGINE=InnoDB
--- ROW_FORMAT=DEFAULT;
-
--- -- --------------------------------------------------------
--- --
--- -- テーブルの構造 `product`
--- --
--- -- DROP TABLE IF EXISTS `product`;
--- CREATE TABLE `product`
--- (
---     `product_id`    INT NOT NULL AUTO_INCREMENT            	COMMENT '商品ID',
---     `genre_id`      INT NOT NULL                           	COMMENT 'ジャンルID',
---     `name`          VARCHAR(255) NOT NULL                  	COMMENT '商品名',
---     `explanation`   VARCHAR(255)                               	COMMENT '商品説明',
---     `tax_out_price` INT NOT NULL                           	COMMENT '税抜価格',
---     `is_sale`       BOOLEAN NOT NULL DEFAULT false          COMMENT '販売ステータス(true:販売可, false:販売不可)',
---     `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
---     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
---     PRIMARY KEY (`product_id`),
---     FOREIGN KEY (`genre_id`) REFERENCES genre(`genre_id`)
--- )
--- COMMENT='商品マスタ'
--- COLLATE='utf8mb4_general_ci'
--- ENGINE=InnoDB
--- ROW_FORMAT=DEFAULT;
-
--- -- --------------------------------------------------------
--- --
--- -- テーブルの構造 `order_detail`
--- --
--- -- DROP TABLE IF EXISTS `order_detail`;
--- CREATE TABLE `order_detail`
--- (
---     `order_detail_id` INT NOT NULL AUTO_INCREMENT           COMMENT '注文明細ID',
---     `product_id`    INT NOT NULL                            COMMENT '商品ID',
---     `order_id`      INT NOT NULL                            COMMENT '注文ID',
---     `quantity`      INT                                     COMMENT '商品購入個数',
---     `subprice`      INT                                     COMMENT '購入時価格(税込み)',
---     `production_status` INT NOT NULL DEFAULT 0              COMMENT '制作ステータス',
---     `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
---     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
---     PRIMARY KEY (`order_detail_id`),
---     FOREIGN KEY (`product_id`) REFERENCES product(`product_id`),
---     FOREIGN KEY (`order_id`) REFERENCES `order`(`order_id`)
--- )
--- COMMENT='注文明細マスタ'
--- COLLATE='utf8mb4_general_ci'
--- ENGINE=InnoDB
--- ROW_FORMAT=DEFAULT;
-
--- -- --------------------------------------------------------
--- --
--- -- テーブルの構造 `cart`
--- --
--- -- DROP TABLE IF EXISTS `cart`;
--- CREATE TABLE `cart`
--- (
---     `cart_id`       INT NOT NULL AUTO_INCREMENT             COMMENT 'カートID',
---     `product_id`    INT NOT NULL                            COMMENT '商品ID',
---     `user_id`       INT NOT NULL                            COMMENT 'ユーザーID',
---     `quantity`      INT                                     COMMENT '商品購入個数',
---     `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
---     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
---     PRIMARY KEY (`cart_id`),
---     FOREIGN KEY (`product_id`) REFERENCES product(`product_id`),
---     FOREIGN KEY (`user_id`) REFERENCES user(`user_id`)
--- )
--- COMMENT='カートマスタ'
--- COLLATE='utf8mb4_general_ci'
--- ENGINE=InnoDB
--- ROW_FORMAT=DEFAULT;
+-- --------------------------------------------------------
+--
+-- テーブルの構造 `cart`
+--
+-- DROP TABLE IF EXISTS `cart`;
+CREATE TABLE `cart`
+(
+    `cart_id`       INT NOT NULL AUTO_INCREMENT             COMMENT 'カートID',
+    `product_id`    INT NOT NULL                            COMMENT '商品ID',
+    `user_id`       INT NOT NULL                            COMMENT 'ユーザーID',
+    `quantity`      INT                                     COMMENT '商品購入個数',
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
+    `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
+    PRIMARY KEY (`cart_id`),
+    FOREIGN KEY (`product_id`) REFERENCES product(`product_id`),
+    FOREIGN KEY (`user_id`) REFERENCES user(`user_id`)
+)
+COMMENT='カートマスタ'
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB
+ROW_FORMAT=DEFAULT;
