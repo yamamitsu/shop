@@ -65,7 +65,7 @@ public class LoginController {
         }
         String name = userList.get(0).getName();
         model.addAttribute("name", name);
-        return "main";
+        return "redirect:/main";
     }
 
     @GetMapping("/show")
