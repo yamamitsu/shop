@@ -18,19 +18,15 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Table(name = "user")
+@Table(name = "genre")
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Genre{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;                 /** ユーザーID */
-    private String name;                /** ユーザー名 */
-    private String postalCode;          /** 郵便番号 */
-    private String address;             /** 住所 */
-    private String phoneNumber;         /** 電話番号 */
-    private String email;               /** メールアドレス */
-    private String password;            /** パスワード */
+    private String name;                /** ジャンル名 */
+    private Boolean genreStatus;        /** ジャンルステータス */
     private LocalDateTime createdAt;    /** 作成日時 */
     private LocalDateTime updatedAt;    /** 更新日時 */
 

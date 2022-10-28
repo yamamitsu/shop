@@ -40,7 +40,7 @@ CREATE TABLE `shipping_address`
     `name`          VARCHAR(50) NOT NULL                    COMMENT '宛名',
     `postal_code`   VARCHAR(255) NOT NULL                   COMMENT '配送先郵便番号',
     `address`       VARCHAR(255) NOT NULL                   COMMENT '配送先住所',
-    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '作成日時',
     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES user(`id`)
@@ -66,7 +66,7 @@ CREATE TABLE `order`
     `total_price`   INT                                     COMMENT '請求額',
     `payment_method` INT DEFAULT 0                          COMMENT '支払方法',
     `order_status`  INT DEFAULT 0                           COMMENT '注文ステータス',
-    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '作成日時',
     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES user(`id`)
@@ -86,7 +86,7 @@ CREATE TABLE `genre`
     `id`            INT NOT NULL AUTO_INCREMENT             COMMENT 'ジャンルID',
     `name`          VARCHAR(255)                            COMMENT 'ジャンル名',
     `genre_status`  BOOLEAN DEFAULT false                   COMMENT 'ジャンルステータス',
-    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '作成日時',
     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
     PRIMARY KEY (`id`)
 )
@@ -105,10 +105,10 @@ CREATE TABLE `product`
     `id`            INT NOT NULL AUTO_INCREMENT            	COMMENT '商品ID',
     `genre_id`      INT NOT NULL                           	COMMENT 'ジャンルID',
     `name`          VARCHAR(255) NOT NULL                  	COMMENT '商品名',
-    `explanation`   VARCHAR(255)                               	COMMENT '商品説明',
+    `explanation`   VARCHAR(255)                            COMMENT '商品説明',
     `tax_out_price` INT NOT NULL                           	COMMENT '税抜価格',
     `is_sale`       BOOLEAN NOT NULL DEFAULT false          COMMENT '販売ステータス(true:販売可, false:販売不可)',
-    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '作成日時',
     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
     PRIMARY KEY (`id`),
     FOREIGN KEY (`genre_id`) REFERENCES genre(`id`)
@@ -131,7 +131,7 @@ CREATE TABLE `order_detail`
     `quantity`      INT                                     COMMENT '商品購入個数',
     `subprice`      INT                                     COMMENT '購入時価格(税込み)',
     `production_status` INT NOT NULL DEFAULT 0              COMMENT '制作ステータス',
-    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '作成日時',
     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
     PRIMARY KEY (`id`),
     FOREIGN KEY (`product_id`) REFERENCES product(`id`),
@@ -153,7 +153,7 @@ CREATE TABLE `cart`
     `product_id`    INT NOT NULL                            COMMENT '商品ID',
     `user_id`       INT NOT NULL                            COMMENT 'ユーザーID',
     `quantity`      INT                                     COMMENT '商品購入個数',
-    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '登録日時',
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '作成日時',
     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
     PRIMARY KEY (`id`),
     FOREIGN KEY (`product_id`) REFERENCES product(`id`),
