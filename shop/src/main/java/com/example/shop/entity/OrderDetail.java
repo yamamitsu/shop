@@ -1,6 +1,8 @@
 package com.example.shop.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,22 +28,32 @@ import lombok.NoArgsConstructor;
 public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;                 /** 注文明細ID */
+    @Column(name = "product_id")
     private Integer productId;          /** 商品ID */
+    @Column(name = "order_id")
     private Integer orderId;            /** 注文ID */
+    @Column(name = "quantity")
     private Integer quantity;           /** 商品購入値段 */
+    @Column(name = "subprice")
     private Integer subprice;           /** 購入時価格(税込み) */
+    @Column(name = "production_status")
     private Integer productionStatus;   /** 制作ステータス */
+    @Column(name = "created_at")
     private LocalDateTime createdAt;    /** 作成日時 */
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;    /** 更新日時 */
 
     @ManyToOne(targetEntity = Product.class)
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    private Product product;
+    @JoinColumn(name = "product_id", referencedColumnName = "id", 
+    insertable = false, updatable = false)
+    private List<Product> products = new ArrayList<Product>();
 
     @ManyToOne(targetEntity = Order.class)
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
-    private Order order;
+    @JoinColumn(name = "order_id", referencedColumnName = "id", 
+    insertable = false, updatable = false)
+    private List<Order> orders = new ArrayList<Order>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = true)

@@ -24,14 +24,23 @@ import lombok.NoArgsConstructor;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;                 /** ユーザーID */
+    @Column(name = "name")
     private String name;                /** ユーザー名 */
+    @Column(name = "postal_code")
     private String postalCode;          /** 郵便番号 */
+    @Column(name = "address")
     private String address;             /** 住所 */
+    @Column(name = "phone_number")
     private String phoneNumber;         /** 電話番号 */
+    @Column(name = "email")
     private String email;               /** メールアドレス */
+    @Column(name = "password")
     private String password;            /** パスワード */
+    @Column(name = "created_ad")
     private LocalDateTime createdAt;    /** 作成日時 */
+    @Column(name = "updated_ad")
     private LocalDateTime updatedAt;    /** 更新日時 */
 
     @CreatedDate
