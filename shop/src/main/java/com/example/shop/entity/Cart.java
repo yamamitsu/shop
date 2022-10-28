@@ -30,11 +30,11 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;                 /** カートID */
-    @Column(name = "producted_id")
-    private Integer productId;          /** 商品ID */
-    @Column(name = "user_id")
-    private Integer userId;             /** ユーザーID */
-    @Column(name = "quantity")
+    // @Column(name = "producted_id")
+    // private Integer productId;          /** 商品ID */
+    // @Column(name = "user_id")
+    // private Integer userId;             /** ユーザーID */
+    // @Column(name = "quantity")
     private Integer quantitiy;          /** 商品購入個数 */
     @Column(name = "created_at")
     private LocalDateTime createdAt;    /** 作成日時 */
@@ -44,12 +44,12 @@ public class Cart {
     @OneToMany(targetEntity = Product.class)
     @JoinColumn(name = "product_id", referencedColumnName = "id", 
     insertable = false, updatable = false)
-    private List<Product> products = new ArrayList<Product>();
+    private Product product;
 
     @OneToMany(targetEntity = User.class)
     @JoinColumn(name = "user_id", referencedColumnName = "id", 
     insertable = false, updatable = false)
-    private List<User> users = new ArrayList<User>();
+    private User user;
 
     @CreatedDate
     @Column(name = "created_at", updatable = true)

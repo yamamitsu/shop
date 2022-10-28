@@ -30,10 +30,10 @@ public class OrderDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;                 /** 注文明細ID */
-    @Column(name = "product_id")
-    private Integer productId;          /** 商品ID */
-    @Column(name = "order_id")
-    private Integer orderId;            /** 注文ID */
+    // @Column(name = "product_id")
+    // private Integer productId;          /** 商品ID */
+    // @Column(name = "order_id")
+    // private Integer orderId;            /** 注文ID */
     @Column(name = "quantity")
     private Integer quantity;           /** 商品購入値段 */
     @Column(name = "subprice")
@@ -48,12 +48,12 @@ public class OrderDetail {
     @ManyToOne(targetEntity = Product.class)
     @JoinColumn(name = "product_id", referencedColumnName = "id", 
     insertable = false, updatable = false)
-    private List<Product> products = new ArrayList<Product>();
+    private Product product;
 
     @ManyToOne(targetEntity = Order.class)
     @JoinColumn(name = "order_id", referencedColumnName = "id", 
     insertable = false, updatable = false)
-    private List<Order> orders = new ArrayList<Order>();
+    private Order order;
 
     @CreatedDate
     @Column(name = "created_at", updatable = true)

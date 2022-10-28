@@ -30,8 +30,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;                 /** 商品ID */
-    @Column(name = "genre_id")
-    private Integer genreId;            /** ジャンルID */
+    @ManyToOne(targetEntity = Genre.class)
+    @JoinColumn(name="genre_id", referencedColumnName ="id", 
+        insertable = false, updatable = false)
+    private Genre genre;
     @Column(name = "name")
     private String name;                /** 商品名 */
     @Column(name = "explanation")
@@ -45,10 +47,7 @@ public class Product {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;    /** 更新日時 */
 
-    @ManyToOne(targetEntity = Genre.class)
-    @JoinColumn(name="genre_id", referencedColumnName ="id", 
-    insertable = false, updatable = false)
-    private List<Genre> genres = new ArrayList<Genre>();
+    
 
     @CreatedDate
     @Column(name = "created_at", updatable = true)

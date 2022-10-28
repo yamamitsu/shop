@@ -30,8 +30,8 @@ public class ShippingAddress {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;                 /** 配送先ID */
-    @Column(name = "user_id")
-    private Integer userId;             /** ユーザーID */
+    // @Column(name = "user_id")
+    // private Integer userId;             /** ユーザーID */
     @Column(name = "name")
     private String name;                /** 宛名 */
     @Column(name = "postal_code")
@@ -46,7 +46,7 @@ public class ShippingAddress {
     @OneToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id", referencedColumnName = "id", 
     insertable = false, updatable = false)
-    private List<User> users = new ArrayList<User>();
+    private User user;
     
     @CreatedDate
     @Column(name = "created_at", updatable = true)

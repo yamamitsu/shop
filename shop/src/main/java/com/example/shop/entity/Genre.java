@@ -25,7 +25,7 @@ public class Genre{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;                 /** ユーザーID */
+    private Integer id;                 /** ジャンルID */
     @Column(name = "name")
     private String name;                /** ジャンル名 */
     @Column(name = "genre_status")

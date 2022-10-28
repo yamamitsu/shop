@@ -30,9 +30,9 @@ public class Order{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;                 /** 注文ID */
-    @Column(name = "user_id")
-    private Integer userId;             /** ユーザーID */
-    @Column(name = "name")
+    // @Column(name = "user_id")
+    // private Integer userId;             /** ユーザーID */
+    // @Column(name = "name")
     private String name;                /** 宛名 */
     @Column(name = "postal_code")
     private String postalCode;          /** 配送先郵便番号 */
@@ -54,7 +54,7 @@ public class Order{
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id", referencedColumnName = "id", 
     insertable = false, updatable = false)
-    private List<User> users = new ArrayList<User>();
+    private User user;
 
     @CreatedDate
     @Column(name = "created_at", updatable = true)
