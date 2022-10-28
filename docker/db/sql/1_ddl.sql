@@ -105,7 +105,7 @@ CREATE TABLE `product`
     `id`            INT NOT NULL AUTO_INCREMENT            	COMMENT '商品ID',
     `genre_id`      INT NOT NULL                           	COMMENT 'ジャンルID',
     `name`          VARCHAR(255) NOT NULL                  	COMMENT '商品名',
-    `explanation`   VARCHAR(255)                            COMMENT '商品説明',
+    `explanation`   VARCHAR(255)                               	COMMENT '商品説明',
     `tax_out_price` INT NOT NULL                           	COMMENT '税抜価格',
     `is_sale`       BOOLEAN NOT NULL DEFAULT false          COMMENT '販売ステータス(true:販売可, false:販売不可)',
     `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     COMMENT '作成日時',

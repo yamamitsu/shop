@@ -6,6 +6,20 @@
 </head>
 <body>
     <div>ログイン中：[[${name}]]</div>
-    <h1>メイン</h1>
+    <h1>商品一覧</h1>
+    <table>
+        <tr>
+            <th>購入</th>
+            <th>商品名</th>
+            <th>価格</th>
+            <th>説明</th>
+        </tr>
+        <tr th:each="product:${productList}">
+            <td th:text="${product.isSale}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.taxOutPrice}"></td>
+            <td th:text="${product.explanation"></td>
+        </tr>
+    </table>
 </body>
 </html>

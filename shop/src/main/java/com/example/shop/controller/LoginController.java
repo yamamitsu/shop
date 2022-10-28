@@ -48,7 +48,7 @@ public class LoginController {
     }
 
     /** ログイン処理 */
-    @PostMapping("/main")
+    @PostMapping("/login")
     public String login(@Validated LoginForm form, BindingResult result, Model model, RedirectAttributes redirectAttributes){
         /** 入力チェック */
         if(result.hasErrors()){

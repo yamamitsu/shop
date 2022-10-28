@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.example.shop.entity.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String>{
+public interface UserRepository extends JpaRepository<User, Integer>{
 
     List<User> findByEmailAndPassword(String email, String password);
     Optional<User> findByEmail(String email);
