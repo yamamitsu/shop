@@ -45,7 +45,11 @@ public class LoginController {
 
     /** ログイン画面への遷移 */
     @GetMapping("/")
-    public String showLogin(){
+    public String showLogin(Model model){
+        if(loginUser.getIsLogin()){
+            model.addAttribute("loginUser", loginUser);
+            return "redirect:/main";
+        }
         return "login";
     }
 

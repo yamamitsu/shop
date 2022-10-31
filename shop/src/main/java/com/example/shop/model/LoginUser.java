@@ -10,7 +10,7 @@ import org.springframework.web.context.annotation.SessionScope;
 public class LoginUser implements Serializable{
     private static final long serialVersionUID = 1L;
     private String name;
-    private Boolean isLogin;
+    private Boolean isLogin = false;
     
     public LoginUser(){}
     public LoginUser(String name, Boolean isLogin){
