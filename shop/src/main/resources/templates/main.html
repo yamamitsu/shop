@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:replace="layout :: base_header('Main',~{::link})">
     <meta charset="UTF-8">
     <title>メイン</title>
 </head>
 <body>
-    <div>ログイン中：[[${loginUser.name}]]</div>
-    <a href="/logout">ログアウト</a>
+    <div th:replace="layout :: header"></div>
     <h1>商品一覧</h1>
     <table border="1">
         <tr>
@@ -22,5 +21,6 @@
             <td th:text="${product.explanation}"></td>
         </tr>
     </table>
+    <div th:replace="layout :: footer"></div>
 </body>
 </html>

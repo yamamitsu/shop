@@ -1,0 +1,17 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<!--引数の title, links は fragment expressions */-->
+<head th:fragment="base_header(title,links)">
+  <!--/* 各ビュータイトル */-->
+  <title th:text="${title==null}? 'no title' : ${title}">Spring boot de Hello world!</title> 
+  <!--/* 必ず読み込むファイル */-->
+
+  <!--/* 固有で読み込むリンク */-->
+</head>
+<header th:fragment="header">
+    <div>ログイン中：[[${loginUser.name}]]</div>
+    <a href="/logout">ログアウト</a>
+</header>
+<footer th:fragment="footer">
+  <p>ここはフッターです</p>
+</footer>
+</html>
