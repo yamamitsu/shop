@@ -55,7 +55,7 @@ public class LoginController {
     /** ログイン処理 */
     @PostMapping("/login")
     public String login(@Validated LoginForm form, BindingResult result, Model model, 
-        RedirectAttributes redirectAttributes, HttpSession session){
+        RedirectAttributes redirectAttributes){
         /** 入力チェック */
         if(result.hasErrors()){
             /** 入力チェックエラーの場合ログイン画面へリダイレクト */
@@ -71,19 +71,9 @@ public class LoginController {
         }
         String name = userList.get(0).getName();
         loginUser.setName(name);
+        loginUser.setIsLogin(true);
         model.addAttribute("loginUser", loginUser);
         return "redirect:/main";
-    }
-
-    @GetMapping("/show")
-    public String show(Model model){
-        Optional<User> opt = service.findByEmail("yamasuke.ry@gmail.com");
-        if(!opt.isPresent()){
-            return "login";
-        }
-        User user = opt.get();
-        model.addAttribute("name", user.getName());
-        return "main";
     }
 
 }

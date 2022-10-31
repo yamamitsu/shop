@@ -12,6 +12,7 @@
         </table>
         <div th:each="error:${#fields.globalErrors()}" th:text="${error}" style="color:red"></div>
         <div th:text="${caution}" style="color:red"></div>
+        <div th:text="${message}" style="color:red"></div>
         <button type="submit" th:text="#{button.login}"></button>
     </form>
     <a href="/register">新規登録</a>

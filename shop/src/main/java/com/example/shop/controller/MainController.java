@@ -19,6 +19,10 @@ public class MainController {
 
     @GetMapping
     public String show(Model model) {
+        if(loginUser.getIsLogin() != true){
+            model.addAttribute("caution", "認証が必要です、ログインしてください。");
+            return "login";
+        }
         model.addAttribute("loginUser", loginUser);
         model.addAttribute("productList", service.findAll());
         return "main";
