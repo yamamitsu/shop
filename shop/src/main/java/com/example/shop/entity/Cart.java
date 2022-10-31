@@ -1,6 +1,8 @@
 package com.example.shop.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,12 +44,12 @@ public class Cart {
     @OneToMany(targetEntity = Product.class)
     @JoinColumn(name = "product_id", referencedColumnName = "id", 
     insertable = false, updatable = false)
-    private Product product;
+    private List<Product> products = new ArrayList<Product>();
 
     @OneToMany(targetEntity = User.class)
     @JoinColumn(name = "user_id", referencedColumnName = "id", 
     insertable = false, updatable = false)
-    private User user;
+    private List<User> users = new ArrayList<User>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = true)

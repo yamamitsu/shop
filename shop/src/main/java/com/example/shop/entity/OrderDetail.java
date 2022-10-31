@@ -1,6 +1,8 @@
 package com.example.shop.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,12 +48,12 @@ public class OrderDetail {
     @ManyToOne(targetEntity = Product.class)
     @JoinColumn(name = "product_id", referencedColumnName = "id", 
     insertable = false, updatable = false)
-    private Product product;
+    private List<Product> products = new ArrayList<Product>();
 
     @ManyToOne(targetEntity = Order.class)
     @JoinColumn(name = "order_id", referencedColumnName = "id", 
     insertable = false, updatable = false)
-    private Order order;
+    private List<Order> orders = new ArrayList<Order>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = true)

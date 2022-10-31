@@ -1,6 +1,8 @@
 package com.example.shop.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -52,7 +54,7 @@ public class Order{
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id", referencedColumnName = "id", 
     insertable = false, updatable = false)
-    private User user;
+    private List<User> users = new ArrayList<User>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = true)

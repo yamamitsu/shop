@@ -1,6 +1,8 @@
 package com.example.shop.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,10 +30,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;                 /** 商品ID */
-    @ManyToOne(targetEntity = Genre.class)
-    @JoinColumn(name="genre_id", referencedColumnName ="id", 
-        insertable = false, updatable = false)
-    private Genre genre;
+    // @Column(name = "genre_id")
+    // private Integer genreId;         /** ジャンルID */
     @Column(name = "name")
     private String name;                /** 商品名 */
     @Column(name = "explanation")
@@ -45,7 +45,10 @@ public class Product {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;    /** 更新日時 */
 
-    
+    @ManyToOne(targetEntity = Genre.class)
+    @JoinColumn(name="genre_id", referencedColumnName ="id", 
+    insertable = false, updatable = false)
+    private Genre genre;
 
     @CreatedDate
     @Column(name = "created_at", updatable = true)
