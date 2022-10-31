@@ -3,6 +3,8 @@ package com.example.shop.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.shop.entity.User;
 import com.example.shop.form.LoginForm;
+import com.example.shop.model.LoginUser;
 import com.example.shop.service.UserService;
 import com.example.shop.validator.LoginValidator;
 
@@ -27,6 +30,8 @@ public class LoginController {
     UserService service;
     @Autowired
     LoginValidator loginValidator;
+    @Autowired
+    LoginUser loginUser;
 
     /** 「form-backing bean」の初期化 */
     @ModelAttribute
@@ -49,7 +54,8 @@ public class LoginController {
 
     /** ログイン処理 */
     @PostMapping("/login")
-    public String login(@Validated LoginForm form, BindingResult result, Model model, RedirectAttributes redirectAttributes){
+    public String login(@Validated LoginForm form, BindingResult result, Model model, 
+        RedirectAttributes redirectAttributes, HttpSession session){
         /** 入力チェック */
         if(result.hasErrors()){
             /** 入力チェックエラーの場合ログイン画面へリダイレクト */
@@ -64,7 +70,8 @@ public class LoginController {
             return "redirect:";
         }
         String name = userList.get(0).getName();
-        model.addAttribute("name", name);
+        loginUser.setName(name);
+        model.addAttribute("loginUser", loginUser);
         return "redirect:/main";
     }
 
